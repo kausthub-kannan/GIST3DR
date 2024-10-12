@@ -6,6 +6,7 @@ import {
   UserButton
 } from '@clerk/nextjs'
 import "./globals.css";
+import  {SidebarDemo} from "@/components/Navbar";
 
 export const metadata = {
   title: "Create Next App",
@@ -16,13 +17,8 @@ export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
       <html lang="en">
-        <body>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
+        <body className="flex">
+          <SidebarDemo />
           {children}
         </body>
       </html>
