@@ -8,6 +8,7 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
+import { Button } from "./ui/button"
   
   const invoices = [
     {
@@ -72,7 +73,7 @@ import {
               <TableCell className="font-medium">{invoice.invoice}</TableCell>
               <TableCell>{invoice.paymentStatus}</TableCell>
               <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+              <TableCell className="text-right"><Button class="bg-white text-black p-2 rounded">{invoice.totalAmount}</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>
