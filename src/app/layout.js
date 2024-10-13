@@ -19,7 +19,10 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body className="flex">
           <SidebarDemo />
-          {children}
+       <div className="flex-1 w-full mx-20 ml-20">
+            {children}
+       </div>
+    
         </body>
       </html>
     </ClerkProvider>

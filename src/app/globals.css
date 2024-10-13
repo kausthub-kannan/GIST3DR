@@ -20,3 +20,7 @@ body {
     display: none;
   }
   
+/* .body-content {
+  margin-left: 250px;
+  width: calc(100% - 250px); 
+} */

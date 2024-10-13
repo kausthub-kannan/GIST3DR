@@ -47,7 +47,7 @@ export function SidebarDemo() {
   return (
     (<div
       className={cn(
-        "rounded-md flex flex-col md:flex-row  dark:bg-neutral-800 ",
+        "rounded-md flex flex-col md:flex-row  dark:bg-neutral-800 fixed top-0 left-0 z-[1000] ",
         "h-screen"
       )}>
       <Sidebar open={open} setOpen={setOpen}>
