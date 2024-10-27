@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "gist3dr"
+version = "0.1.0"
+description = ""
+authors = ["kausthub-kannan <kausthubkannan961@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.3"
+sqlmodel = "^0.0.22"
+azure-storage-file-share = "^12.19.0"
+pandas = "^2.2.3"
+numpy = "^2.1.2"
+pyodbc = "^5.2.0"
+uvicorn = "^0.32.0"
+python-dotenv = "^1.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+faker = "^30.8.1"
+black = "^24.10.0"
+ruff = "^0.7.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
