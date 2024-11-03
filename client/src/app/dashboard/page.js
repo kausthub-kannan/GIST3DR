@@ -1,4 +1,9 @@
+import AframeScene from "@/components/ar/ar";
 
 export default function DashboardPage() {
-  return <div>Dashboard</div>
+  return (
+    <div>
+      <AframeScene />
+    </div>
+  );
 }
