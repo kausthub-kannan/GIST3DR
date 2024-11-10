@@ -15,6 +15,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@tabler/icons-react": "^3.19.0",
     "aframe": "^1.6.0",
+    "ar.js": "^2.2.2",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

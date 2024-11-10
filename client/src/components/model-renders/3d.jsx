@@ -6,11 +6,10 @@ const Aframe3DRender = () => {
   const [rotation, setRotation] = useState(45);
   const [modelScale, setModelScale] = useState(1);
 
-  // dynamically import aframe and aframe-react
+  // dynamically import aframe
   useEffect(() => {
     const loadAframe = async () => {
       await import("aframe");
-      await import("aframe-react");
     };
     loadAframe();
   }, []);
@@ -23,7 +22,6 @@ const Aframe3DRender = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
         }}
       >
         <div
@@ -44,6 +42,13 @@ const Aframe3DRender = () => {
 
             <a-obj-model
               src="/models/label_1.obj"
+              position="-250 -400 0"
+              rotation={`30 ${rotation} 5`}
+              scale={`${modelScale} ${modelScale} ${modelScale}`}
+              material="color: #000000; opacity: 1"
+            ></a-obj-model>
+            <a-obj-model
+              src="/models/label_2.obj"
               position="-250 -400 0"
               rotation={`30 ${rotation} 5`}
               scale={`${modelScale} ${modelScale} ${modelScale}`}
