@@ -19,11 +19,11 @@ def populate_patient_details(NUMBER_OF_DATA):
             {
                 "name": name,
                 "age": age,
-                "bone_density_gram_per_cm3": bone_density_gram_per_cm3,
+                "bone_density_gram_per_centimeter_sq": bone_density_gram_per_cm3,
                 "height_millimeter": height_millimeter,
                 "width_millimeter": width_millimeter,
                 "thickness_millimeter": thickness_millimeter,
-                "area_millimeter": area_millimeter,
+                "area_millimeter_sq": area_millimeter,
             },
             ignore_index=True,
         )
@@ -50,4 +50,5 @@ def populate_user_details(NUMBER_OF_DATA):
 if __name__ == "__main__":
     NUMBER_OF_DATA = 5
     populate_user_details(NUMBER_OF_DATA)
+    populate_patient_details(1)
     print("Data populated successfully")

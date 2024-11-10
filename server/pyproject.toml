@@ -9,18 +9,34 @@ readme = "README.md"
 python = "^3.10"
 fastapi = "^0.115.3"
 sqlmodel = "^0.0.22"
-azure-storage-file-share = "^12.19.0"
 pandas = "^2.2.3"
-numpy = "^2.1.2"
-pyodbc = "^5.2.0"
+numpy = "^2.0.1"
 uvicorn = "^0.32.0"
 python-dotenv = "^1.0.1"
+pydicom = "^3.0.1"
+simpleitk = "^2.4.0"
+opencv-python = "^4.10.0.84"
+scikit-image = "^0.24.0"
+modal = "^0.65.19"
+torch = {version = "^2.4.0", source = "pytorch_cpu"}
+torchvision = {version = "^0.20.1+cpu", source = "pytorch_cpu"}
+huggingface-hub = "^0.26.2"
+hf-transfer = "^0.1.8"
+psycopg2-binary = "^2.9.10"
+supabase = "^2.10.0"
+pydantic = {extras = ["email"], version = "^2.9.2"}
 
 
 [tool.poetry.group.dev.dependencies]
 faker = "^30.8.1"
 black = "^24.10.0"
 ruff = "^0.7.1"
+
+
+[[tool.poetry.source]]
+name = "pytorch_cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
 
 [build-system]
 requires = ["poetry-core"]
