@@ -1,8 +1,20 @@
+from dotenv import load_dotenv
 from modal import Image
+import os
+from dotenv import load_dotenv
 
 
 def create_image():
-    image = Image.debian_slim()
+    load_dotenv()
+    image = Image.debian_slim().env({
+        "HOST": os.getenv("HOST"),
+        "DATABASE": os.getenv("DATABASE"),
+        "PORT": os.getenv("PORT"),
+        "USERNAME": os.getenv("USER"),
+        "PASSWORD": os.getenv("PASSWORD"),
+        "SUPABASE_URL": os.getenv("SUPABASE_URL"),
+        "SUPABASE_KEY": os.getenv("SUPABASE_KEY"),
+    })
     image = image.apt_install(
         "libgl1-mesa-glx",
         "libglib2.0-0",
@@ -26,18 +38,13 @@ def create_image():
         "psycopg2-binary==2.9.10",
         "supabase==2.10.0",
         "pydantic[email]==2.9.2",
-    ]
-
-    pytorch_packages = [
-        "--index-url https://download.pytorch.org/whl/cpu",
-        "torch==2.4.0+cpu",
-        "torchvision==0.20.1+cpu",
+        "torch",
+        "torchvision",
     ]
 
     image = (
         image
         .pip_install(*packages)
-        .pip_install(*pytorch_packages)
     )
 
     return image
