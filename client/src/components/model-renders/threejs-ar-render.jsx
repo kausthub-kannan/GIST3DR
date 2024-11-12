@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { ARButton } from 'three/examples/jsm/webxr/ARButton.js';
 
 const ThreeJSARRender = () => {
   const rendererRef = useRef(null);
@@ -33,7 +34,7 @@ const ThreeJSARRender = () => {
     scene.add(cube);
 
     // Setup the AR button
-    document.body.appendChild(THREE.ARButton.createButton(renderer));
+    document.body.appendChild(ARButton.createButton(renderer));
 
     // Render loop
     const render = () => {
