@@ -1,15 +1,20 @@
 from typing import List, Annotated
 
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.params import Query
+from pydicom.filebase import DicomBytesIO
 from sqlalchemy import select
 from sqlmodel import Session
 from database.schemas.tables import Patient
-from utils.schema import PatientIndividual
+from utils.exporter import OBJExporter
+from utils.dicom import read_dicom_slices
 from database.utils.storage import check_file_exists
 from database.utils.connect import DBConfig
+from utils.model import masks_generator_pipeline
+from utils.schema import PatientIndividual
+from utils.setup import setup_logger
 
 load_dotenv()
 
@@ -22,6 +27,7 @@ def get_session():
 db_config = DBConfig()
 engine = db_config.connect_to_database()
 supabase = db_config.connect_to_storage()
+logger = setup_logger("patients", "logs/patients.log")
 
 router = APIRouter(
     prefix="/patient", tags=["patient"], responses={404: {"description": "Not found"}}
@@ -53,6 +59,7 @@ async def get_patients(
     """Get all patients with pagination"""
     db_patients = session.exec(select(Patient).limit(limit)).all()
     patients = [db_patient[0] for db_patient in db_patients]
+    logger.info(f"Retrieved {len(patients)} patients")
     return patients
 
 
@@ -76,42 +83,81 @@ async def get_patient(
         area_millimeter_sq=patient.area_millimeter_sq,
         cancellous_url=(
             supabase.storage.from_("bone_models").create_signed_url(
-                f"{patient_id}_cancellous.obj", 12000
+                f"{patient_id}/cancellous.obj", 12000
             )["signedURL"]
             if check_file_exists(
-                supabase, "bone_models", f"{patient_id}_cancellous.obj"
+                supabase, "bone_models", f"{patient_id}/cancellous.obj"
             )
             else None
         ),
         cortical_url=(
             supabase.storage.from_("bone_models").create_signed_url(
-                f"{patient_id}_cortical.obj", 12000
+                f"{patient_id}/cortical.obj", 12000
             )["signedURL"]
-            if check_file_exists(supabase, "bone_models", f"{patient_id}_cortical.obj")
+            if check_file_exists(supabase, "bone_models", f"{patient_id}/cortical.obj")
             else None
         ),
         nerve_canal_url=(
             supabase.storage.from_("bone_models").create_signed_url(
-                f"{patient_id}_nerve_canal.obj", 12000
+                f"{patient_id}/nerve_canal.obj", 12000
             )["signedURL"]
             if check_file_exists(
-                supabase, "bone_models", f"{patient_id}_nerve_canal.obj"
+                supabase, "bone_models", f"{patient_id}/nerve_canal.obj"
             )
             else None
         ),
     )
 
+    logger.info("Retrieved patient")
+
     return patient_data
 
 
-@router.post("/create")
+@router.post("/create", response_model=Patient)
 async def create_patient(
-    patient: Patient, session: SessionDep, auth: AuthDep
+    auth: AuthDep,
+    session: SessionDep,
+    patient: Patient = Depends(),
+    dicom_file: UploadFile = File,
 ) -> Patient:
     """Create a new patient"""
+
+    dicom_bytes = await dicom_file.read()
+    dicom_buffer = DicomBytesIO(dicom_bytes)
+    slices = read_dicom_slices(dicom_buffer)
+    logger.info(f"Read {len(slices)} slices from DICOM file")
+
+    masks, measurements = masks_generator_pipeline(slices[:5])
+    logger.info("Generated masks and measurements")
+
+    patient.height_millimeter = measurements[2]["height"]
+    patient.width_millimeter = measurements[2]["width"]
     session.add(patient)
+
+    obj_exporter = OBJExporter()
+    try:
+        label_names = ["cancellous", "cortical", "nerve_canal"]
+        for label, mask_list in masks.items():
+            if mask_list:
+                obj_content = obj_exporter.save_multiple_masks_to_obj(mask_list)
+                obj_file = f"{patient.id}_{label_names[label]}.obj"
+                supabase.storage.from_("bone_models").upload(
+                    path=obj_file,
+                    file=obj_content.encode(),
+                    file_options={"contentType": "application/x-tgif"},
+                )
+
+        logger.info("Saved OBJ files to storage")
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Failed to save OBJ files: {e}",
+        )
+
     session.commit()
     session.refresh(patient)
+    logger.info("Created patient")
+
     return patient
 
 
@@ -122,7 +168,10 @@ async def delete_patient(patient_id: str, session: SessionDep, auth: AuthDep):
     if not patient:
         raise HTTPException(status_code=404, detail="Patient not found")
     session.delete(patient)
+    supabase.storage.from_("bone_models").remove([f"{patient_id}"])
     session.commit()
+    session.refresh(patient)
+    logger.info("Deleted patient")
     return {"message": "Patient deleted successfully"}
 
 
@@ -137,11 +186,11 @@ async def update_patient(
             status_code=404, detail=f"Patient with ID {patient_id} not found"
         )
 
-    # Update patient attributes
     for key, value in updated_patient.dict(exclude_unset=True).items():
         setattr(existing_patient, key, value)
 
     session.add(existing_patient)
     session.commit()
     session.refresh(existing_patient)
+    logger.info("Updated patient")
     return existing_patient

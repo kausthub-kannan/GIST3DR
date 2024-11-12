@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlmodel import SQLModel, Field
 from uuid import UUID, uuid4
 
@@ -13,11 +15,11 @@ class Patient(SQLModel, table=True):
     id: UUID = Field(default=uuid4, primary_key=True)
     name: str
     age: int
-    bone_density_gram_per_centimeter_sq: float | None
-    height_millimeter: float | None
-    width_millimeter: float | None
-    thickness_millimeter: float | None
-    area_millimeter_sq: float | None
+    bone_density_gram_per_centimeter_sq: Optional[float] = None
+    height_millimeter: Optional[float] = None
+    width_millimeter: Optional[float] = None
+    thickness_millimeter: Optional[float] = None
+    area_millimeter_sq: Optional[float] = None
 
     class Config:
         from_attributes = True

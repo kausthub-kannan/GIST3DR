@@ -5,6 +5,7 @@ from sqlmodel import Session
 from database.schemas.tables import User
 from database.utils.connect import DBConfig
 from utils.schema import AuthResponse, UserSignUp, UserSignIn
+from utils.setup import setup_logger
 
 load_dotenv()
 
@@ -17,6 +18,7 @@ def get_session():
 db_config = DBConfig()
 engine = db_config.connect_to_database()
 supabase = db_config.connect_to_storage()
+logger = setup_logger("auth", "logs/auth.log")
 
 router = APIRouter(
     prefix="/auth",
@@ -63,6 +65,8 @@ async def signup(user_data: UserSignUp, session: Session = Depends(get_session))
         session.add(new_user)
         session.commit()
 
+        logger.info(f"User {new_user.id} created")
+
         return AuthResponse(
             access_token=auth_session.access_token,
             token_type="bearer",
@@ -94,6 +98,8 @@ async def signin(credentials: UserSignIn):
         session = auth_response.session
         user = auth_response.user
 
+        logger.info(f"User {user.id} signed in")
+
         return AuthResponse(
             access_token=session.access_token,
             token_type="bearer",
@@ -106,7 +112,7 @@ async def signin(credentials: UserSignIn):
             },
         )
 
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
         )
@@ -116,6 +122,7 @@ async def signin(credentials: UserSignIn):
 async def signout():
     try:
         supabase.auth.sign_out()
+        logger.info("User signed out")
         return {"message": "Successfully signed out"}
     except Exception as e:
         raise HTTPException(
@@ -132,7 +139,7 @@ async def refresh_token(refresh_token: str):
             "refresh_token": response.session.refresh_token,
             "expires_at": response.session.expires_at,
         }
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token"
         )

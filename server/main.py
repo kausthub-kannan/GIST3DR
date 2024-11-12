@@ -1,15 +1,14 @@
-import os
-
 import modal
-from modal import Image, Mount, Secret, asgi_app
+from modal import Mount, asgi_app
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from routes import patients, auth
-from utils.modal_setup import create_image
+from utils.setup import create_image, setup_logger
 
 app = modal.App("gist3dr-api")
 image = create_image()
+logger = setup_logger("main", "app.log")
 
 
 def create_app():
@@ -18,6 +17,8 @@ def create_app():
         description="Dental data analytics and implant generation",
         version="0.5.0",
     )
+
+    logger.info("Creating FastAPI app")
 
     web_app.add_middleware(
         CORSMiddleware,
@@ -32,14 +33,14 @@ def create_app():
 
     @web_app.get("/", response_class=JSONResponse)
     async def read_root():
+        logger.info("Health check")
         return {"status": "Healthy"}
 
     return web_app
 
 
 @app.function(
-    image=image,
-    mounts=[Mount.from_local_dir(".", remote_path="/root/web_app")]
+    image=image, mounts=[Mount.from_local_dir(".", remote_path="/root/web_app")]
 )
 @asgi_app()
 def fastapi_app():
