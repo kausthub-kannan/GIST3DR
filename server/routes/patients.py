@@ -127,7 +127,7 @@ async def create_patient(
     slices = read_dicom_slices(dicom_buffer)
     logger.info(f"Read {len(slices)} slices from DICOM file")
 
-    masks, measurements = masks_generator_pipeline(slices[:5])
+    masks, measurements = masks_generator_pipeline(slices)
     logger.info("Generated masks and measurements")
 
     patient.height_millimeter = measurements[2]["height"]

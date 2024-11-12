@@ -8,7 +8,7 @@ from utils.setup import create_image, setup_logger
 
 app = modal.App("gist3dr-api")
 image = create_image()
-logger = setup_logger("main", "app.log")
+logger = setup_logger("main", "logs/app.log")
 
 
 def create_app():
@@ -40,7 +40,7 @@ def create_app():
 
 
 @app.function(
-    image=image, mounts=[Mount.from_local_dir(".", remote_path="/root/web_app")]
+    image=image, mounts=[Mount.from_local_dir(".", remote_path="/root/web_app")], gpu="t4"
 )
 @asgi_app()
 def fastapi_app():
