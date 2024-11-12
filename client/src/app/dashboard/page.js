@@ -1,4 +1,4 @@
-import Aframe3DRender from "@/components/model-renders/3d";
+import Aframe3DRender from "@/components/model-renders/aframe-3d-render";
 
 export default function DashboardPage() {
   return (

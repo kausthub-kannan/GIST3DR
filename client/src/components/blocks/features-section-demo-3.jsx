@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { IconBrandYoutubeFilled } from "@tabler/icons-react";
 import Link from "next/link";
-import Aframe3DRender from "../model-renders/3d";
+import Aframe3DRender from "../model-renders/aframe-3d-render";
 
 export default function FeaturesSectionDemo() {
   const features = [

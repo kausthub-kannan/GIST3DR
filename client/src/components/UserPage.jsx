@@ -10,7 +10,7 @@ import { IconBrandYoutubeFilled } from "@tabler/icons-react";
 import Link from "next/link";
 import { UserInput } from "./UserInput";
 import UserInfo from "./UserInfo";
-import Aframe3DRender from "./model-renders/3d";
+import Aframe3DRender from "./model-renders/aframe-3d-render";
 
 export function UserPage() {
   const features = [
