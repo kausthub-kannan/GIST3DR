@@ -40,7 +40,9 @@ def create_app():
 
 
 @app.function(
-    image=image, mounts=[Mount.from_local_dir(".", remote_path="/root/web_app")], gpu="t4"
+    image=image,
+    mounts=[Mount.from_local_dir(".", remote_path="/root/web_app")],
+    gpu="t4",
 )
 @asgi_app()
 def fastapi_app():

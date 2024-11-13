@@ -125,7 +125,6 @@ def masks_generator_pipeline(slices, model_path="model.pth"):
         slc_normalized = slc_float / slc_float.max()
 
         masks = seg_gen.get_masks(slc_normalized)
-        print(f"Slice {idx + 1} processed")
         for label, mask in masks.items():
             selected_masks[label].append(mask)
             width, height = get_measurements(label, mask)
