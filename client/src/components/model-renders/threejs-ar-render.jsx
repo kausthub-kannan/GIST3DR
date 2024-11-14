@@ -28,10 +28,27 @@ const ThreeJSARRender = () => {
     light.position.set(0.5, 1, 0.25);
     scene.add(light);
 
-    // Placeholder geometry for dental screw (replace with 3D model later)
-    const screwGeometry = new THREE.SphereGeometry(0.1, 32, 16);
-    const screwMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    // Replace the sphere geometry with a more screw-like geometry
+    const screwHeight = 0.2;
+    const screwRadius = 0.03;
+    const screwGeometry = new THREE.CylinderGeometry(
+      screwRadius, // radiusTop
+      screwRadius, // radiusBottom
+      screwHeight, // height
+      32, // radialSegments
+      1, // heightSegments
+      true // openEnded
+    );
+
+    // Use a more realistic material with metallic appearance
+    const screwMaterial = new THREE.MeshStandardMaterial({
+      color: 0x888888, // Grey metallic color
+      metalness: 0.8,
+      roughness: 0.3,
+    });
+
     const screw = new THREE.Mesh(screwGeometry, screwMaterial);
+    screw.rotation.x = Math.PI / 2; // Rotate to stand upright
     screw.position.set(0, 0, -1); // Position 1 meter in front
     scene.add(screw);
 
