@@ -11,8 +11,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 export function SidebarDemo() {
+  // useAuth();
   const links = [
     {
       label: "Dashboard",
@@ -26,13 +28,6 @@ export function SidebarDemo() {
       href: "#",
       icon: (
         <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
-    {
-      label: "Settings",
-      href: "#",
-      icon: (
-        <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
@@ -60,7 +55,7 @@ export function SidebarDemo() {
               ))}
             </div>
           </div>
-          <div>
+          {/* <div>
             <SidebarLink
               link={{
                 label: "Manu Arora",
@@ -74,7 +69,7 @@ export function SidebarDemo() {
                     alt="Avatar" />
                 ),
               }} />
-          </div>
+          </div> */}
         </SidebarBody>
       </Sidebar>
       {/* <Dashboard /> */}
