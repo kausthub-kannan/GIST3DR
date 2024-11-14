@@ -7,14 +7,12 @@ const ThreeJSARRender = () => {
   const rendererRef = useRef(null);
 
   useEffect(() => {
-    // Initialize the WebGL renderer with alpha for transparency
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.xr.enabled = true;
     document.body.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Create scene and camera for AR environment
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       70,
@@ -23,47 +21,62 @@ const ThreeJSARRender = () => {
       20
     );
 
-    // Add ambient light
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     light.position.set(0.5, 1, 0.25);
     scene.add(light);
 
-    // Replace the sphere geometry with a more screw-like geometry
     const screwHeight = 0.2;
     const screwRadius = 0.03;
-    const screwGeometry = new THREE.CylinderGeometry(
-      screwRadius, // radiusTop
-      screwRadius, // radiusBottom
-      screwHeight, // height
-      32, // radialSegments
-      1, // heightSegments
-      true // openEnded
-    );
 
-    // Use a more realistic material with metallic appearance
+    const headHeight = 0.04;
+    const headRadius = screwRadius * 1.8;
+    const headGeometry = new THREE.CylinderGeometry(
+      headRadius,
+      headRadius,
+      headHeight,
+      32
+    );
     const screwMaterial = new THREE.MeshStandardMaterial({
-      color: 0x888888, // Grey metallic color
+      color: 0x888888,
       metalness: 0.8,
       roughness: 0.3,
     });
+    const head = new THREE.Mesh(headGeometry, screwMaterial);
+    head.position.y = screwHeight / 2 + headHeight / 2;
 
-    const screw = new THREE.Mesh(screwGeometry, screwMaterial);
-    screw.rotation.x = Math.PI / 2; // Rotate to stand upright
-    screw.position.set(0, 0, -1); // Position 1 meter in front
-    scene.add(screw);
+    const bodyGeometry = new THREE.CylinderGeometry(
+      screwRadius,
+      screwRadius * 0.8,
+      screwHeight,
+      32
+    );
+    const body = new THREE.Mesh(bodyGeometry, screwMaterial);
 
-    // Add AR button to DOM
+    const screwGroup = new THREE.Group();
+    screwGroup.add(head);
+    screwGroup.add(body);
+
+    screwGroup.rotation.x = -Math.PI / 2;
+    screwGroup.position.set(0, 0, -1);
+    scene.add(screwGroup);
+
     document.body.appendChild(ARButton.createButton(renderer));
 
-    // Set up the rendering loop with WebXR animation
+    const handleResize = () => {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    };
+    window.addEventListener("resize", handleResize);
+
     renderer.setAnimationLoop(() => {
       renderer.render(scene, camera);
     });
 
-    // Cleanup function for removing renderer and AR elements on component unmount
     return () => {
       renderer.setAnimationLoop(null);
       if (renderer.domElement) document.body.removeChild(renderer.domElement);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
