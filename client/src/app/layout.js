@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className="flex">
+      <body className="flex bg-black text-[#ddffdc]">
         {/* {isLoggedIn && <SidebarDemo />} */}
         <SidebarDemo />
         {/* <div className={`flex-1 w-full ${isLoggedIn ? 'mx-20 ml-20' : ''}`}> */}

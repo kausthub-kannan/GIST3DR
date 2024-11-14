@@ -20,21 +20,21 @@ export function SidebarDemo() {
       label: "Dashboard",
       href: "#",
       icon: (
-        <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconBrandTabler className="text-[#7fee64] h-5 w-5 flex-shrink-0" />
       ),
     },
-    {
-      label: "Profile",
-      href: "#",
-      icon: (
-        <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
+    // {
+    //   label: "Profile",
+    //   href: "#",
+    //   icon: (
+    //     <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+    //   ),
+    // },
     {
       label: "Logout",
       href: "#",
       icon: (
-        <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconArrowLeft className="text-[#7fee64] h-5 w-5 flex-shrink-0" />
       ),
     },
   ];
@@ -80,13 +80,13 @@ export const Logo = () => {
   return (
     (<Link
       href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
+      className="font-normal flex space-x-2 items-center text-sm text-[#7fee64] py-1 relative z-20">
       <div
-        className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
+        className="h-5 w-6 bg-[#7fee64] rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="font-medium text-black dark:text-white whitespace-pre">
+        className="font-medium text-[#7fee64] whitespace-pre">
         Acet Labs
       </motion.span>
     </Link>)
@@ -96,9 +96,9 @@ export const LogoIcon = () => {
   return (
     (<Link
       href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
+      className="font-normal flex space-x-2 items-center text-sm text-[#7fee64] py-1 relative z-20">
       <div
-        className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
+        className="h-5 w-6 bg-[#7fee64] rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
     </Link>)
   );
 };

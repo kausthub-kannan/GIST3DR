@@ -71,7 +71,7 @@ export function AddUser() {
   };
 
   return (
-    <div className="w-full my-10 mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
+    <div className="w-full my-10 mx-auto border-0 p-4 md:p-8 shadow-input bg-[#7fee64] border-[#7fee64]">
       <form className="my-8" onSubmit={handleSubmit}>
         <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4">
           <LabelInputContainer>

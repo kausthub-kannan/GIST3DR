@@ -10,12 +10,13 @@ import { useAuth } from "@/hooks/useAuth";
 
 export default function Home() {
     // useAuth();
+    // bg-gradient-to-br from-green-700 to-green-900
   const tabs = [
     {
       title: "All Patients",
       value: "product",
       content: (
-        <div className="w-full min-h-[600px] overflow-hidden relative rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-green-700 to-green-900">
+        <div className="w-full min-h-[600px] overflow-hidden relative rounded-2xl p-10 text-xl md:text-4xl font-bold text-black bg-[#7fee64]">
           <p>Patients Data</p>
           <PatientsList />
         </div>
@@ -25,7 +26,7 @@ export default function Home() {
       title: " Add Patients",
       value: "services",
       content: (
-        <div className="w-full overflow-hidden relative h-fit rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-green-700 to-green-900">
+        <div className="w-full overflow-hidden relative h-fit border-0 rounded-2xl p-10 text-xl md:text-4xl font-bold text-black bg-[#7fee64]">
           <p className="flex items-center gap-2">Add Patients <Plus strokeWidth={3}/></p>
           <AddUser />
         </div>
