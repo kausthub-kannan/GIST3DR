@@ -10,7 +10,7 @@ import { IconBrandYoutubeFilled } from "@tabler/icons-react";
 import Link from "next/link";
 import { UserInput } from "./UserInput";
 import UserInfo from "./UserInfo";
-import Aframe3DRender from "./model-renders/aframe-3d-render";
+import Bones3DRender from "./model-renders/bones-3d-render";
 
 export function UserPage() {
   const features = [
@@ -21,7 +21,7 @@ export function UserPage() {
     },
     {
       // title: "Track issues effectively hello",
-      skeleton: <Aframe3DRender />,
+      skeleton: <Bones3DRender />,
       className:
         "col-span-1 lg:col-span-4 border-b lg:border-r dark:border-neutral-800",
     },

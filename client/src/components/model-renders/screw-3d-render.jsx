@@ -3,26 +3,32 @@ import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-const ThreeJS3DRender = () => {
+const Screw3DRender = ({
+  containerWidth = "100%",
+  containerHeight = "500px",
+  screwHeight = 0.2,
+  screwRadius = 0.03,
+  headHeight = 0.04,
+}) => {
   const mountRef = useRef(null);
 
   useEffect(() => {
-    // Setup renderer
+    // Get parent container dimensions
+    const container = mountRef.current;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // Setup renderer with container dimensions
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
     mountRef.current.appendChild(renderer.domElement);
 
     // Setup scene
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f0f0);
 
-    // Setup camera
-    const camera = new THREE.PerspectiveCamera(
-      70,
-      window.innerWidth / window.innerHeight,
-      0.01,
-      20
-    );
+    // Setup camera with container aspect ratio
+    const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 20);
     camera.position.z = 2;
 
     // Add OrbitControls
@@ -40,13 +46,10 @@ const ThreeJS3DRender = () => {
     dirLight.position.set(5, 5, 5);
     scene.add(dirLight);
 
-    // Create screw body
-    const screwHeight = 0.2;
-    const screwRadius = 0.03;
+    // Updated screw dimensions using props
+    const headRadius = screwRadius * 1.8;
 
     // Create screw head
-    const headHeight = 0.04;
-    const headRadius = screwRadius * 1.8;
     const headGeometry = new THREE.CylinderGeometry(
       headRadius,
       headRadius,
@@ -64,7 +67,7 @@ const ThreeJS3DRender = () => {
     // Create screw body
     const bodyGeometry = new THREE.CylinderGeometry(
       screwRadius,
-      screwRadius * 0.8, // Slightly tapered end
+      screwRadius * 0.8,
       screwHeight,
       32
     );
@@ -88,14 +91,37 @@ const ThreeJS3DRender = () => {
     };
     animate();
 
+    // Add window resize handler
+    const handleResize = () => {
+      const newWidth = container.clientWidth;
+      const newHeight = container.clientHeight;
+
+      camera.aspect = newWidth / newHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(newWidth, newHeight);
+    };
+
+    window.addEventListener("resize", handleResize);
+
     // Cleanup function
     return () => {
+      window.removeEventListener("resize", handleResize);
       mountRef.current.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, []);
+  }, [screwHeight, screwRadius, headHeight]);
 
-  return <div ref={mountRef} style={{ width: "100%", height: "100%" }} />;
+  return (
+    <div
+      ref={mountRef}
+      style={{
+        width: containerWidth,
+        height: containerHeight,
+        minHeight: containerHeight,
+        position: "relative",
+      }}
+    />
+  );
 };
 
-export default ThreeJS3DRender;
+export default Screw3DRender;
