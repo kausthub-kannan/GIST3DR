@@ -5,20 +5,22 @@ export function useAuth() {
     const router = useRouter();
 
     useEffect(() => {
-        const token = localStorage.getItem('access_token');
-        if (!token) {
+        const token = localStorage.getItem('token');
+        if (!token && router.pathname !== '/sign-up') {
             router.push('/sign-in');
         }
     }, [router]);
 }
 
+
 export function useAuthOnAuthPage() {
     const router = useRouter();
 
     useEffect(() => {
-        const token = localStorage.getItem('access_token');
-        if (token) {
+        const token = localStorage.getItem('token');
+        if (token && router.pathname !== '/sign-up') {
             router.push('/');
         }
     }, [router]);
 }
+

@@ -12,15 +12,15 @@ export default function RootLayout({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
   }, []);
 
   return (
     <html lang="en">
       <body className="flex bg-black text-[#ddffdc]">
-        {/* {isLoggedIn && <SidebarDemo />} */}
-        <SidebarDemo />
+        {isLoggedIn && <SidebarDemo />}
+        {/* <SidebarDemo /> */}
         {/* <div className={`flex-1 w-full ${isLoggedIn ? 'mx-20 ml-20' : ''}`}> */}
         <div className="flex-1 w-full mx-20 ml-20">
           {children}

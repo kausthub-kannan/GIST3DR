@@ -18,7 +18,7 @@ export function SidebarDemo() {
   const links = [
     {
       label: "Dashboard",
-      href: "#",
+      href: "/",
       icon: (
         <IconBrandTabler className="text-[#7fee64] h-5 w-5 flex-shrink-0" />
       ),
@@ -31,8 +31,8 @@ export function SidebarDemo() {
     //   ),
     // },
     {
-      label: "Logout",
-      href: "#",
+      label: "Add a patient",
+      href: "/add-patient",
       icon: (
         <IconArrowLeft className="text-[#7fee64] h-5 w-5 flex-shrink-0" />
       ),
@@ -87,7 +87,7 @@ export const Logo = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="font-medium text-[#7fee64] whitespace-pre">
-        Acet Labs
+        KKs Labs
       </motion.span>
     </Link>)
   );
