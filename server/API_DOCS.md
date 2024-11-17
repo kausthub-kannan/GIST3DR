@@ -43,6 +43,18 @@
 
 3. POST `/auth/signout`
 
+### Users
+1. GET `/user`:
+    - Response:
+        ```json
+        {
+          "email": "string",
+          "id": "uuid",
+          "grade": "junior",
+          "name": "string"
+        }
+        ```
+
 ### Patients
 1. GET `/patients`:
     - Response:
@@ -71,7 +83,17 @@
           "height_millimeter": 0,
           "width_millimeter": 0,
           "thickness_millimeter": 0,
-          "area_millimeter_sq": 0
+          "area_millimeter_sq": 0,
+          "modal_urls": {
+            "cancellous": "string",
+            "cortical": "string",
+            "nerve_canal": "string"
+          },
+          "gif_urls": {
+            "cancellous": "string",
+            "cortical": "string",
+            "nerve_canal": "string"
+          }   
         }
         ```
       
