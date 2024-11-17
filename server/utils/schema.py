@@ -93,3 +93,12 @@ class AuthResponse(BaseModel):
     access_token: str
     token_type: str
     user: dict
+
+
+class User(BaseModel):
+    email: str
+    name: str
+    grade: str
+
+    class Config:
+        from_attributes = True

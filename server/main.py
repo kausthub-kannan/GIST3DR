@@ -3,7 +3,7 @@ from modal import Mount, asgi_app
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from routes import patients, auth
+from routes import patients, auth, users
 from utils.setup import create_image, setup_logger
 
 app = modal.App("gist3dr-api")
@@ -30,6 +30,7 @@ def create_app():
 
     web_app.include_router(auth.router)
     web_app.include_router(patients.router)
+    web_app.include_router(users.router)
 
     @web_app.get("/", response_class=JSONResponse)
     async def read_root():

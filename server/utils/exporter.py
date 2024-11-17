@@ -77,6 +77,7 @@ class OBJExporter:
         else:
             raise ValueError("No OBJ content generated")
 
+
 def convert_mask_to_rgb(mask, label):
     colors = ([86, 58, 156], [175, 23, 64], [255, 128, 0])
     rgb_mask = np.ones((mask.shape[0], mask.shape[1], 3), dtype=np.uint8) * 255

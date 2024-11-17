@@ -1,6 +1,5 @@
 import random
 from typing import Optional
-from pydantic import field_validator
 from sqlmodel import SQLModel, Field
 from uuid import UUID, uuid4
 
