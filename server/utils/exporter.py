@@ -1,3 +1,6 @@
+import io
+
+import imageio
 import numpy as np
 from skimage import measure
 
@@ -73,3 +76,17 @@ class OBJExporter:
             return obj_content
         else:
             raise ValueError("No OBJ content generated")
+
+def convert_mask_to_rgb(mask, label):
+    colors = ([86, 58, 156], [175, 23, 64], [255, 128, 0])
+    rgb_mask = np.ones((mask.shape[0], mask.shape[1], 3), dtype=np.uint8) * 255
+    rgb_mask[mask == 1] = colors[label - 1]
+    return rgb_mask
+
+
+def masks_to_gif(masks, label):
+    colored_masks = [convert_mask_to_rgb(mask, label) for mask in masks]
+    gif_bytes = io.BytesIO()
+    imageio.mimsave(gif_bytes, colored_masks, fps=55, format="GIF")
+    gif_bytes.seek(0)
+    return gif_bytes.getvalue()

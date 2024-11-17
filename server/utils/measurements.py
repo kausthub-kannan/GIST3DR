@@ -22,6 +22,10 @@ def get_height(start_point, end_point, scaling_factor=0.6, mm_to_px=0.2645833333
     return round(distance * scaling_factor * mm_to_px, 2)
 
 
+def get_area(mask, mm_to_px=0.2645833333):
+    return round(np.sum(mask) * mm_to_px**2, 2)
+
+
 def get_top_and_down_points(polygon):
     min_y = np.min(polygon[:, 1])
     t_points = polygon[polygon[:, 1] == min_y]

@@ -1,6 +1,6 @@
 from numpy._typing import NDArray
 from pydantic import BaseModel, EmailStr, field_validator
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 import numpy as np
 
 
@@ -61,9 +61,16 @@ class PatientIndividual(BaseModel):
     width_millimeter: float | None
     thickness_millimeter: float | None
     area_millimeter_sq: float | None
-    cancellous_url: str | None
-    cortical_url: str | None
-    nerve_canal_url: str | None
+    modal_urls: Dict[str, str | None] = {
+        "cancellous": None,
+        "cortical": None,
+        "nerve_canal": None,
+    }
+    gif_urls: Dict[str, str | None] = {
+        "cancellous": None,
+        "cortical": None,
+        "nerve_canal": None,
+    }
 
     class Config:
         from_attributes = True

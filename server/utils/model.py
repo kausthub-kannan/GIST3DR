@@ -8,7 +8,7 @@ from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
 from huggingface_hub import hf_hub_download
 from utils.dicom import read_dicom_slices
-from utils.measurements import get_measurements
+from utils.measurements import get_measurements, get_area
 from utils.schema import Detections
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class SegGEN:
         self.model.load_state_dict(
             torch.load(
                 hf_hub_download(
-                    repo_id=repo_id, filename=model_path, cache_dir="/.cache"
+                    repo_id=repo_id, filename=model_path, cache_dir="./cache"
                 ),
                 map_location=torch.device(self.device),
                 weights_only=True,
@@ -113,10 +113,12 @@ def masks_generator_pipeline(slices, model_path="model.pth"):
         1: {
             "height": [],
             "width": [],
+            "area": [],
         },
         2: {
             "height": [],
             "width": [],
+            "area": [],
         },
     }
 
@@ -129,8 +131,9 @@ def masks_generator_pipeline(slices, model_path="model.pth"):
             selected_masks[label].append(mask)
             width, height = get_measurements(label, mask)
 
-            selected_measurement[label]["height"] = height
-            selected_measurement[label]["width"] = width
+            selected_measurement[label]["height"].append(height)
+            selected_measurement[label]["width"].append(width)
+            selected_measurement[label]["area"].append(get_area(mask))
 
     print(f"{len(selected_masks)} label slices processed")
 
@@ -139,4 +142,4 @@ def masks_generator_pipeline(slices, model_path="model.pth"):
 
 if __name__ == "__main__":
     slices = read_dicom_slices("../processed.dcm")
-    masks_generator_pipeline(slices)
+    selected_masks, selected_measurement = masks_generator_pipeline(slices)

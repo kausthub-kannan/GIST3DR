@@ -26,6 +26,7 @@ psycopg2-binary = "^2.9.10"
 supabase = "^2.10.0"
 pydantic = {extras = ["email"], version = "^2.9.2"}
 python-multipart = "^0.0.17"
+imageio = "^2.36.0"
 
 
 [tool.poetry.group.dev.dependencies]
