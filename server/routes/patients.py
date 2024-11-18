@@ -1,3 +1,4 @@
+import uuid
 from typing import List, Annotated, Optional
 from uuid import uuid4
 
@@ -255,7 +256,9 @@ async def delete_patient(patient_id: str, session: SessionDep, auth: AuthDep):
 async def update_patient(
     auth: AuthDep,
     session: SessionDep,
-    patient: Patient = Depends(),
+    id: uuid = Form(...),
+    name: str = Form(...),
+    age: int = Form(...),
     dicom_file: Optional[UploadFile] = File(None),
 ) -> Patient:
     """
@@ -274,6 +277,7 @@ async def update_patient(
         HTTPException: If patient not found or processing fails
     """
     # Validate patient exists
+    patient = Patient(id=id, name=name, age=age)
     existing_patient = session.get(Patient, patient.id)
     if not existing_patient:
         logger.error(f"Patient {patient.id} not found")
