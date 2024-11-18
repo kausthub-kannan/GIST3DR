@@ -2,7 +2,7 @@ from typing import List, Annotated, Optional
 from uuid import uuid4
 
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.params import Query
 from pydicom.filebase import DicomBytesIO
@@ -151,7 +151,8 @@ async def get_patient(
 async def create_patient(
     auth: AuthDep,
     session: SessionDep,
-    patient: Patient = Depends(),
+    name: str = Form(...),
+    age: int = Form(...),
     dicom_file: UploadFile = File,
 ) -> Patient:
     """Create a new patient"""
@@ -164,6 +165,7 @@ async def create_patient(
     masks, measurements = masks_generator_pipeline(slices)
     logger.info("Generated masks and measurements")
 
+    patient = Patient(name=name, age=age)
     patient.id = str(uuid4())
     patient.height_millimeter = round(
         sum(measurements[2]["height"]) / len(measurements[2]["height"]), 2
