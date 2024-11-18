@@ -1,89 +1,55 @@
+import { useState, useEffect } from "react";
 import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
-import { Button } from "./ui/button"
-  
-  const invoices = [
-    {
-      invoice: "INV001",
-      paymentStatus: "Paid",
-      totalAmount: "$250.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV002",
-      paymentStatus: "Pending",
-      totalAmount: "$150.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV003",
-      paymentStatus: "Unpaid",
-      totalAmount: "$350.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV004",
-      paymentStatus: "Paid",
-      totalAmount: "$450.00",
-      paymentMethod: "Credit Card",
-    },
-    {
-      invoice: "INV005",
-      paymentStatus: "Paid",
-      totalAmount: "$550.00",
-      paymentMethod: "PayPal",
-    },
-    {
-      invoice: "INV006",
-      paymentStatus: "Pending",
-      totalAmount: "$200.00",
-      paymentMethod: "Bank Transfer",
-    },
-    {
-      invoice: "INV007",
-      paymentStatus: "Unpaid",
-      totalAmount: "$300.00",
-      paymentMethod: "Credit Card",
-    },
-  ]
-  
-  export function PatientsList() {
-    return (
-      <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Invoice</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>{invoice.paymentMethod}</TableCell>
-              <TableCell className="text-right"><Button class="bg-white text-black p-2 rounded">{invoice.totalAmount}</Button></TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
-    )
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { getPatients } from "../api/patient"; // Import the getPatients function
+import { Skeleton } from "./ui/skeleton";
+import { useRouter } from 'next/navigation';
+
+export function PatientsList({patients}) {
+  const router = useRouter();
+
+  const handleUserRedirect =(id)=>{
+    router.push(`/user/${id}`);
   }
-  
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow className="text-black bg-[#7fee64] rounded-md border mt-2">
+          <TableHead>Name</TableHead>
+          <TableHead>Age</TableHead>
+          <TableHead>Bone Density</TableHead>
+          <TableHead>Height</TableHead>
+          <TableHead>Width</TableHead>
+          <TableHead>Thickness</TableHead>
+          <TableHead>Area</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {patients.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={7} className="text-center">Add Patient</TableCell>
+          </TableRow>
+        ) : (
+          patients.map((patient) => (
+            <TableRow key={patient?.id} className="w-full cursor-pointer text-[#7fee64]" onClick={()=> handleUserRedirect(patient.id)}>
+              <TableCell className="font-medium">{patient.name}</TableCell>
+              <TableCell>{patient.age}</TableCell>
+              <TableCell>{patient.bone_density_gram_per_centimeter_sq.toFixed(2)}</TableCell>
+              <TableCell>{patient.height_millimeter.toFixed(2)}</TableCell>
+              <TableCell>{patient.width_millimeter.toFixed(2)}</TableCell>
+              <TableCell>{patient.thickness_millimeter}</TableCell>
+              <TableCell>{patient.area_millimeter_sq.toFixed(2)}</TableCell>
+            </TableRow>
+          ))
+        )}
+      </TableBody>
+    </Table>
+  );
+}

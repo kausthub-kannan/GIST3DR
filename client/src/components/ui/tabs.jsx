@@ -26,7 +26,7 @@ export const Tabs = ({
   return (<>
     <div
       className={cn(
-        "flex flex-row items-center justify-start [perspective:1000px] relative overflow-auto sm:overflow-visible no-visible-scrollbar max-w-full w-full",
+        "flex flex-row items-center justify-start [perspective:1000px] relative overflow-auto sm:overflow-visible no-visible-scrollbar max-w-full w-full text-[#ddffdc]",
         containerClassName
       )}>
       {propTabs.map((tab, idx) => (
@@ -51,7 +51,7 @@ export const Tabs = ({
               )} />
           )}
 
-          <span className="relative block text-black dark:text-white">
+          <span className="relative block text-[#ddffdc]">
             {tab.title}
           </span>
         </button>
