@@ -32,7 +32,7 @@ export function UserPage({ id }) {
   if (loading) {
     return <div className="flex flex-col space-y-3 m-8">
       <Skeleton className="bg-gray-800 h-[125px] w-full rounded-xl" />
-      <div class="flex gap-2">
+      <div className="flex gap-2">
         <Skeleton className="bg-gray-800 h-[525px] w-[400px] rounded-xl" />
         <Skeleton className="bg-gray-800 h-[525px] w-full rounded-xl" />
       </div>

@@ -67,7 +67,7 @@ export default function Signup() {
         <div className="flex justify-center items-center w-full h-full mt-8 bg-[#7fee64] border-[#7fee64] rounded-xl">
             <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 border-0 bg-[#7fee64] border-[#7fee64]">
                 <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-                    Welcome to Aceternity
+                    Welcome to KKs Lab
                 </h2>
                 {loading ? <>
                     <ThreeDots

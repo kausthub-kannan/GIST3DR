@@ -15,8 +15,8 @@ export default function Signup() {
     const router = useRouter();
     
     const [formData, setFormData] = useState({
-        firstname: "",
-        lastname: "",
+        first_name: "",
+        last_name: "",
         email: "",
         password: "",
         grade: ""
@@ -34,19 +34,27 @@ export default function Signup() {
         e.preventDefault();
         try {
             setLoading(true);
-            const response = await signup(formData);
-            if (response) {
-                localStorage.setItem("token", response?.access_token);
-                localStorage.setItem("user_email", response?.user?.email);
-                localStorage.setItem("user_first_name", response?.user?.first_name);
-                localStorage.setItem("user_last_name", response?.user?.last_name);
-
+            const response = await signup(formData); // Assuming signup returns the full response
+            
+            // Adjust based on response structure
+            const user = response?.user || response?.data?.user; // Handle both possible cases
+            const accessToken = response?.access_token || response?.data?.access_token;
+    
+            if (user && accessToken) {
+                // Save user details and token to localStorage
+                localStorage.setItem("token", accessToken);
+                localStorage.setItem("user_email", user.email);
+                localStorage.setItem("user_first_name", user.first_name);
+                localStorage.setItem("user_last_name", user.last_name);
+    
                 setSuccess("Signup successful!");
-                // setError(null);
-                setLoading(false); // Clear any existing errors
+                setLoading(false); // Clear loading state
                 router.push('/');
+            } else {
+                throw new Error("Invalid response format");
             }
         } catch (err) {
+            // Handle specific errors from API response
             if (err.response && err.response.data && err.response.data.detail === "User already registered") {
                 setError("User already registered. Please sign in.");
             } else {
@@ -56,6 +64,7 @@ export default function Signup() {
             console.error("Error during signup:", err);
         }
     };
+    
 
     return (
         <div className="flex flex-col gap-2">
@@ -66,9 +75,6 @@ export default function Signup() {
                     <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
                         Welcome to KKs Lab
                     </h2>
-                    {/* <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-                    Login to aceternity if you can because we don&apos;t have a login flow yet
-                </p> */}
                     {loading ? <>
                         <ThreeDots
                             visible={true}
@@ -84,12 +90,12 @@ export default function Signup() {
                         <form className="my-8" onSubmit={handleSubmit}>
                             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
                                 <LabelInputContainer>
-                                    <Label htmlFor="firstname">First name</Label>
-                                    <Input id="firstname" placeholder="Tyler" type="text" onChange={handleChange} value={formData.firstname} />
+                                    <Label htmlFor="first_name">First name</Label>
+                                    <Input id="first_name" placeholder="Tyler" type="text" onChange={handleChange} value={formData.first_name} />
                                 </LabelInputContainer>
                                 <LabelInputContainer>
-                                    <Label htmlFor="lastname">Last name</Label>
-                                    <Input id="lastname" placeholder="Durden" type="text" onChange={handleChange} value={formData.lastname} />
+                                    <Label htmlFor="last_name">Last name</Label>
+                                    <Input id="last_name" placeholder="Durden" type="text" onChange={handleChange} value={formData.last_name} />
                                 </LabelInputContainer>
                             </div>
                             <LabelInputContainer className="mb-4">

@@ -38,7 +38,7 @@ export function PatientsList({patients}) {
           </TableRow>
         ) : (
           patients.map((patient) => (
-            <TableRow key={patient.uuid} className="w-full cursor-pointer text-[#7fee64]" onClick={()=> handleUserRedirect(patient.id)}>
+            <TableRow key={patient?.id} className="w-full cursor-pointer text-[#7fee64]" onClick={()=> handleUserRedirect(patient.id)}>
               <TableCell className="font-medium">{patient.name}</TableCell>
               <TableCell>{patient.age}</TableCell>
               <TableCell>{patient.bone_density_gram_per_centimeter_sq.toFixed(2)}</TableCell>
