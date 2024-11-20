@@ -1,104 +1,78 @@
-"use client";
-import React, { useState } from "react";
-import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
+import React, { useState } from 'react';
 import {
-  IconArrowLeft,
-  IconBrandTabler,
-  IconSettings,
-  IconUserBolt,
-} from "@tabler/icons-react";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/useAuth";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from './ui/button';
+import { ThreeDots } from "react-loader-spinner";
 
-export function SidebarDemo() {
-  // useAuth();
-  const links = [
-    {
-      label: "Dashboard",
-      href: "/",
-      icon: (
-        <IconBrandTabler className="text-[#7fee64] h-5 w-5 flex-shrink-0" />
-      ),
-    },
-    // {
-    //   label: "Profile",
-    //   href: "#",
-    //   icon: (
-    //     <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-    //   ),
-    // },
-    {
-      label: "Add a patient",
-      href: "/add-patient",
-      icon: (
-        <IconArrowLeft className="text-[#7fee64] h-5 w-5 flex-shrink-0" />
-      ),
-    },
-  ];
-  const [open, setOpen] = useState(false);
+import useAuthStore from '@/stores/authStore';
+import { signout } from "@/api/auth";
+
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+export const Navbar = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const email = useAuthStore((state) => state.email);
+  const first_name = useAuthStore((state) => state.user_first_name);
+  const last_name = useAuthStore((state) => state.user_last_name);
+  const clearAuthData = useAuthStore((state) => state.clearAuthData);
+
+  console.log(`${first_name} ${last_name}`)
+  console.log(email)
+
+  const handleLogout = async () => {
+    setLoading(true); // Show loading spinner
+    // await signout();
+    // Clear localStorage (if you’re using it for persistence)
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_email");
+    localStorage.removeItem("user_first_name");
+    localStorage.removeItem("user_last_name");
+
+    // Clear Zustand store
+    clearAuthData();
+    setLoading(false); // Hide loading spinner
+    router.push('/sign-in');
+
+    console.log("User logged out successfully.");
+  };
+
+
   return (
-    (<div
-      className={cn(
-        "rounded-md flex flex-col md:flex-row  dark:bg-neutral-800 fixed top-0 left-0 z-[1000] ",
-        "h-screen"
-      )}>
-      <Sidebar open={open} setOpen={setOpen}>
-        <SidebarBody className="justify-between gap-10">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            {open ? <Logo /> : <LogoIcon />}
-            <div className="mt-8 flex flex-col gap-2">
-              {links.map((link, idx) => (
-                <SidebarLink key={idx} link={link} />
-              ))}
+    <>
+      <div className="flex gap-2 w-full rounded-2xl p-4 border-2 text-[#7fee64] border-[#7fee64] justify-between items-center mb-4 mt-4">
+        <h1 className="font-bold text-xl">KKs Lab</h1>
+        <ul className="flex gap-6 ">
+          <li><Link href='/'>Dashboard</Link></li>
+          <li><Link href='/add-patient'>Add Patient</Link></li>
+        </ul>
+        <Popover>
+          <PopoverTrigger>
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+
+          </PopoverTrigger>
+          <PopoverContent align="end" className="bg-[#1B1B1B] rounded-2xl p-4 border-2 text-[#7fee64] border-[#7fee64]">
+            <div className='flex flex-col gap-2'>
+              <h2>{first_name} {last_name}</h2>
+              <h4>{email}</h4>
+
+              {loading ? <>
+                <ThreeDots height="80" width="80" color="#7fee64" ariaLabel="loading" /></> : <><Button variant="outline" onClick={handleLogout}>Logout</Button></>}
+
             </div>
-          </div>
-          {/* <div>
-            <SidebarLink
-              link={{
-                label: "Manu Arora",
-                href: "#",
-                icon: (
-                  <Image
-                    src=""
-                    className="h-7 w-7 flex-shrink-0 rounded-full"
-                    width={50}
-                    height={50}
-                    alt="Avatar" />
-                ),
-              }} />
-          </div> */}
-        </SidebarBody>
-      </Sidebar>
-      {/* <Dashboard /> */}
-    </div>)
-  );
+          </PopoverContent>
+        </Popover>
+
+      </div>
+    </>
+  )
 }
-export const Logo = () => {
-  return (
-    (<Link
-      href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-[#7fee64] py-1 relative z-20">
-      <div
-        className="h-5 w-6 bg-[#7fee64] rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="font-medium text-[#7fee64] whitespace-pre">
-        KKs Labs
-      </motion.span>
-    </Link>)
-  );
-};
-export const LogoIcon = () => {
-  return (
-    (<Link
-      href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-[#7fee64] py-1 relative z-20">
-      <div
-        className="h-5 w-6 bg-[#7fee64] rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0" />
-    </Link>)
-  );
-};

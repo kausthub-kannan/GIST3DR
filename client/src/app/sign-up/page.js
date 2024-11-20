@@ -4,15 +4,21 @@ import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { cn } from "@/lib/utils";
 import { signup } from "../../api/auth"; // Import signup function from auth service
-import { useAuthOnAuthPage } from "../../hooks/useAuth";
 import { useRouter } from 'next/navigation';
 import { ThreeDots } from 'react-loader-spinner'
+import { setCookie } from 'cookies-next';
+
+import { useAuthOnAuthPage } from "../../hooks/useAuth";
+import { fetchPatients } from "@/hooks/useFetchPatients";
+import usePatientsStore from "@/stores/patientStore";
+import useAuthStore from "@/stores/authStore";
 
 // Import signup function from auth service
 export default function Signup() {
 
-    useAuthOnAuthPage();
+    // useAuthOnAuthPage();
     const router = useRouter();
+    const authStore = useAuthStore.getState();
     
     const [formData, setFormData] = useState({
         first_name: "",
@@ -46,6 +52,21 @@ export default function Signup() {
                 localStorage.setItem("user_email", user.email);
                 localStorage.setItem("user_first_name", user.first_name);
                 localStorage.setItem("user_last_name", user.last_name);
+
+                // Store token in cookies
+                setCookie('token', token, { maxAge: 60 * 60 * 24 * 7 }); // 7 days
+
+                authStore.setAuthData({
+                    isAuthenticated: true,
+                    token: response?.data.access_token,
+                    user_email: response?.data.user.email,
+                    user_first_name: response?.data.user.first_name,
+                    user_last_name: response?.data.user.last_name,
+                })
+
+                //updated store right after successfull signin
+                // fetchPatients(response?.data.access_token);
+                fetchPatients();
     
                 setSuccess("Signup successful!");
                 setLoading(false); // Clear loading state
