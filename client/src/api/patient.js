@@ -1,7 +1,7 @@
 //api/patient.js
 import apiClient from './apiClient';
 
-export const getPatients = (token) => 
+export const getAllPatients = (token) => 
   apiClient.get('/patient', {
     headers: { Authorization: `Bearer ${token}` }
   });

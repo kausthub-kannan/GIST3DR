@@ -1,4 +1,4 @@
-import { getPatients } from "@/api/patient";
+import { getAllPatients } from "@/api/patient";
 import usePatientsStore from "@/stores/patientStore";
 import useAuthStore from "@/stores/authStore";
 
@@ -14,7 +14,7 @@ export const fetchPatients = async () => {
 
     try {
         setLoading(true); // Set loading to true before fetching
-        const response = await getPatients(token);
+        const response = await getAllPatients(token);
         console.log("fetchPatients Response:", response);
         updatePatientsArray(response.data); // Update Zustand store with fetched data
     } catch (error) {
