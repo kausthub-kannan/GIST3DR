@@ -3,7 +3,8 @@ import usePatientsStore from "@/stores/patientStore";
 import useAuthStore from "@/stores/authStore";
 
 export const fetchPatients = async () => {
-    const token = useAuthStore.getState().token;
+    // const token = useAuthStore.getState().token;
+    const token = localStorage.getItem("token");
     if (!token) {
         console.error("Token is required to fetch patients");
         return;

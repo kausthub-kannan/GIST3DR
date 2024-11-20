@@ -6,6 +6,7 @@ import { FileUpload } from "@/components/ui/file-upload"
 import { Navbar } from "@/components/Navbar";
 import useAuthStore from "@/stores/authStore";
 import { FileUploader } from "react-drag-drop-files";
+import { ThreeDots } from 'react-loader-spinner'
 
 
 export default function AddUser() {
@@ -100,6 +101,18 @@ export default function AddUser() {
       <Navbar />
       <div className="w-[800px] mx-auto border-0 p-4 pt-0 md:p-8">
 
+        {loading ? <>
+          <ThreeDots
+                            visible={true}
+                            height="80"
+                            width="80"
+                            color="#4fa94d"
+                            radius="9"
+                            ariaLabel="three-dots-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                        />
+        </> : <>
         <form className="my-8" onSubmit={handleSubmit}>
           <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4 border-2 border-[#7fee64] p-2 rounded-md ">
             <label htmlFor="name" className="text-[#7fee64] shrink-0">Name : </label>
@@ -122,25 +135,7 @@ export default function AddUser() {
             />
             {errors.dicom_file && <p className="text-red-500">{errors.dicom_file}</p>}
           </div>
-          <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4 border-2 border-[#7fee64] p-2 rounded-md ">
-            <label htmlFor="dicom_file" className="text-[#7fee64]">DICOM File : </label>
-            <FileUploader
-        multiple={true}
-        handleChange={handleFileChange}
-        name="file"
-        types={["DCOM"]}
-        label="upload or drop a DCOM file here"
-        uploadedLabel="uploaded successfully"
-        required={true}
-        hoverTitle="Upload here"
-      />
-      <p>{formData.dicom_file ? `File name: ${file[0].name}` : "no files uploaded yet"}</p>
-            {errors.dicom_file && <p className="text-red-500">{errors.dicom_file}</p>}
-          </div>
 
-          {/* <div className="w-full max-w-4xl mx-auto min-h-96 border-2 border-dashed bg-[#1B1B1B] border-[#7fee64] rounded-lg">
-            <FileUpload onChange={handleFileChange} />
-          </div> */}
           <div className="flex w-full justify-end">
             <button
               className="bg-[#7fee64] p-2 mt-2 rounded-md text-black font-medium text-base"
@@ -149,6 +144,9 @@ export default function AddUser() {
             </button>
           </div>
         </form>
+        </>}
+
+        
       </div>
     </div>
   );

@@ -21,8 +21,7 @@ export function PatientsList() {
   const token = useAuthStore.getState().token;
 
   const handleLoadPatients = () => {
-    console.log(token)
-    if(token) fetchPatients();
+   fetchPatients();
   };
 
   const handleUserRedirect = (id) => {
