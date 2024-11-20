@@ -4,15 +4,22 @@ import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { cn } from "@/lib/utils";
 import { signin } from "../../api/auth";
-import { useAuthOnAuthPage } from "../../hooks/useAuth";
 import { useRouter } from 'next/navigation';
-import { ThreeDots } from 'react-loader-spinner' // Import signup function from auth service
+import { ThreeDots } from 'react-loader-spinner'
+import { setCookie } from 'cookies-next';
 
-export default function Signup() {
+
+import { useAuthOnAuthPage } from "../../hooks/useAuth";
+import { fetchPatients } from "@/hooks/useFetchPatients";
+import usePatientsStore from "@/stores/patientStore";
+import useAuthStore from "@/stores/authStore";
+
+export default function Signin() {
     //custom hook for page protection
-    useAuthOnAuthPage();
+    // useAuthOnAuthPage();
     
     const router = useRouter();
+    const authStore = useAuthStore.getState();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -39,11 +46,28 @@ export default function Signup() {
             if (response) {
                 console.log("ok")
                 console.log(response)
+
                 //local storage or should i use zustand?
                 localStorage.setItem("token", response?.data.access_token);
                 localStorage.setItem("user_email", response?.data.user.email);
                 localStorage.setItem("user_first_name", response?.data.user.first_name);
                 localStorage.setItem("user_last_name", response?.data.user.last_name);
+
+                // Store token in cookies
+                setCookie('token', response?.data.access_token, { maxAge: 60 * 60 * 24 * 7 }); // 7 days
+
+                //ye le kar leye zustand 
+                authStore.setAuthData({
+                    isAuthenticated: true,
+                    token: response?.data.access_token,
+                    user_email: response?.data.user.email,
+                    user_first_name: response?.data.user.first_name,
+                    user_last_name: response?.data.user.last_name,
+                })
+
+                //updated store right after successfull signin
+                // fetchPatients(response?.data.access_token);
+                await fetchPatients();
 
                 //confirmations
                 setSuccess("Signup successful!");

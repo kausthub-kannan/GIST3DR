@@ -9,22 +9,11 @@ import { useEffect, useState } from "react";
 // };
 
 export default function RootLayout({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
 
   return (
     <html lang="en">
-      <body className="flex bg-black text-[#ddffdc]">
-        {isLoggedIn && <SidebarDemo />}
-        {/* <SidebarDemo /> */}
-        {/* <div className={`flex-1 w-full ${isLoggedIn ? 'mx-20 ml-20' : ''}`}> */}
-        <div className="flex-1 w-full mx-20 ml-20">
+      <body className="flex bg-[#1B1B1B] text-[#ddffdc] mx-20">
           {children}
-        </div>
       </body>
     </html>
   );
