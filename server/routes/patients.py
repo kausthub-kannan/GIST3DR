@@ -256,7 +256,6 @@ async def delete_patient(patient_id: str, session: SessionDep, auth: AuthDep):
 async def update_patient(
     auth: AuthDep,
     session: SessionDep,
-    id: uuid = Form(...),
     name: str = Form(...),
     age: int = Form(...),
     dicom_file: Optional[UploadFile] = File(None),
