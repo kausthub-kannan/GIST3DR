@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { PatientsList } from "@/components/PatientsList";
 import { ThreeDots } from 'react-loader-spinner'
 import { Navbar } from "@/components/Navbar";
+import './styles.css'
 
 //hooks
 import { useAuth } from "@/hooks/useAuth";
@@ -16,8 +17,8 @@ export default function Home() {
 
   return (
     <div className=" h-screen relative flex flex-col w-full items-start justify-start">
-      <Navbar />
-        <div className="w-full min-h-[600px] overflow-hidden relative rounded-2xl p-4 text-xl md:text-4xl border-2 font-bold text-[#7fee64] border-[#7fee64] bg-[#1B1B1B] text-[#ddffdc]">
+      {/* <Navbar /> */}
+        <div className="card w-full min-h-[600px] overflow-hidden relative rounded-2xl p-4 text-xl md:text-4xl border-2 font-bold text-[#7fee64] border-[#7fee64] text-[#ddffdc]">
           <PatientsList />
         </div>
       {/* </>} */}

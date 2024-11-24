@@ -7,14 +7,19 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from './ui/button';
 import { ThreeDots } from "react-loader-spinner";
+import '../app/styles.css'
+
+import { BackgroundGradient } from "../components/ui/background-gradient";
 
 import useAuthStore from '@/stores/authStore';
 import { signout } from "@/api/auth";
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 export const Navbar = () => {
+  useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -46,13 +51,13 @@ export const Navbar = () => {
 
   return (
     <>
-      <div className="flex gap-2 w-full rounded-2xl p-4 border-2 text-[#7fee64] border-[#7fee64] justify-between items-center mb-4 mt-4">
+      <div className="card flex gap-2 w-full rounded-2xl p-4 border-2 border-[#7fee64] justify-between items-center mb-4 mt-4">
         <h1 className="font-bold text-xl">KKs Lab</h1>
         <ul className="flex gap-6 ">
           <li><Link href='/'>Dashboard</Link></li>
           <li><Link href='/add-patient'>Add Patient</Link></li>
         </ul>
-        <Popover>
+        <Popover className="card">
           <PopoverTrigger>
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" />
@@ -60,15 +65,18 @@ export const Navbar = () => {
             </Avatar>
 
           </PopoverTrigger>
-          <PopoverContent align="end" className="bg-[#1B1B1B] rounded-2xl p-4 border-2 text-[#7fee64] border-[#7fee64]">
+          <PopoverContent align="end" className="border-0">
+          {/* card bg-[#1B1B1B] rounded-2xl p-4 border-2  */}
+          <BackgroundGradient className="rounded-[22px] max-w-sm p-4 sm:p-10">
             <div className='flex flex-col gap-2'>
-              <h2>{first_name} {last_name}</h2>
-              <h4>{email}</h4>
-
+              <h2>Hello {first_name || "Doctor"} {last_name}</h2>
+              <h4>{email || "abc@gmail.com"}</h4>
+                
               {loading ? <>
-                <ThreeDots height="80" width="80" color="#7fee64" ariaLabel="loading" /></> : <><Button variant="outline" onClick={handleLogout}>Logout</Button></>}
+                <ThreeDots height="80" width="80" color="#7fee64" ariaLabel="loading" /></> : <><Button variant="outline" onClick={handleLogout} className="mt-4 bg-white text-black hover:scale-105">Logout</Button></>}
 
             </div>
+            </BackgroundGradient>
           </PopoverContent>
         </Popover>
 

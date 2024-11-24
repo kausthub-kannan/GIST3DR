@@ -91,9 +91,9 @@ export default function Signup() {
         <div className="flex flex-col gap-2">
 
 
-            <div className="flex justify-center items-center w-full h-full mt-8 bg-[#7fee64] border-[#7fee64] rounded-md">
-                <div className="max-w-xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8">
-                    <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
+            <div className="flex justify-center items-center w-full h-full mt-8 ">
+                <div className="card max-w-xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8">
+                    <h2 className="font-bold text-xl">
                         Welcome to KKs Lab
                     </h2>
                     {loading ? <>
@@ -111,25 +111,25 @@ export default function Signup() {
                         <form className="my-8" onSubmit={handleSubmit}>
                             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
                                 <LabelInputContainer>
-                                    <Label htmlFor="first_name">First name</Label>
-                                    <Input id="first_name" placeholder="Tyler" type="text" onChange={handleChange} value={formData.first_name} />
+                                    <Label htmlFor="first_name" className="text-white">First name</Label>
+                                    <Input className="card text-white" id="first_name" placeholder="Tyler" type="text" onChange={handleChange} value={formData.first_name} />
                                 </LabelInputContainer>
                                 <LabelInputContainer>
-                                    <Label htmlFor="last_name">Last name</Label>
-                                    <Input id="last_name" placeholder="Durden" type="text" onChange={handleChange} value={formData.last_name} />
+                                    <Label htmlFor="last_name" className="text-white">Last name</Label>
+                                    <Input className="card text-white" id="last_name" placeholder="Durden" type="text" onChange={handleChange} value={formData.last_name} />
                                 </LabelInputContainer>
                             </div>
                             <LabelInputContainer className="mb-4">
-                                <Label htmlFor="email">Email Address</Label>
-                                <Input id="email" placeholder="projectmayhem@fc.com" type="email" onChange={handleChange} value={formData.email} />
+                                <Label htmlFor="email" className="text-white">Email Address</Label>
+                                <Input className="card text-white" id="email" placeholder="projectmayhem@fc.com" type="email" onChange={handleChange} value={formData.email} />
                             </LabelInputContainer>
                             <LabelInputContainer className="mb-4">
-                                <Label htmlFor="password">Password</Label>
-                                <Input id="password" placeholder="••••••••" type="password" onChange={handleChange} value={formData.password} />
+                                <Label htmlFor="password" className="text-white">Password</Label>
+                                <Input className="card text-white" id="password" placeholder="••••••••" type="password" onChange={handleChange} value={formData.password} />
                             </LabelInputContainer>
                             <LabelInputContainer className="mb-8">
-                                <Label htmlFor="grade">Grade</Label>
-                                <Input id="grade" placeholder="junior/senior" type="text" onChange={handleChange} value={formData.grade} />
+                                <Label htmlFor="grade" className="text-white">Grade</Label>
+                                <Input className="card text-white" id="grade" placeholder="junior/senior" type="text" onChange={handleChange} value={formData.grade} />
                             </LabelInputContainer>
 
                             {error && <p className="text-red-500">{error}</p>}
@@ -143,7 +143,7 @@ export default function Signup() {
                         </form>
                     </>}
 
-                    <a href="/sign-in" className="text-black">sign in</a>
+                    <a href="/sign-in" className="card px-4 p-2 rounded-full">sign in</a>
                 </div>
             </div>
             {error &&

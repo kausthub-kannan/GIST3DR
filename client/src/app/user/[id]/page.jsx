@@ -7,18 +7,19 @@ import { Badge } from "../../../components/ui/badge";
 import useAuthStore from "@/stores/authStore";
 import { ThreeDots } from "react-loader-spinner";
 import { useAuth } from "@/hooks/useAuth";
+import { DemoAR } from "@/components/DemoAR";
 
 
 
 
 export default function User({ params }) {
-  // useAuth();
+  useAuth();
   const { id } = params; 
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  // const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  const token = useAuthStore((state) => state.token);
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  // const token = useAuthStore((state) => state.token);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -39,7 +40,7 @@ export default function User({ params }) {
 
   if (loading) {
     return (<>
-      <ThreeDots height="80" width="80" color="#7fee64" ariaLabel="loading" />
+      <ThreeDots height="80" width="80" color="white" ariaLabel="loading" />
     </>);
   }
 
@@ -48,15 +49,16 @@ export default function User({ params }) {
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full m-4 p-4">
-    <div className="flex gap-4 w-full border-2 border-[#7fee64] bg-[#7fee64] text-black rounded-md p-4 items-center">
+    <div className="flex flex-col gap-4 w-full">
+    <div className="card flex gap-4 w-full border-2  rounded-md p-4 items-center">
       <h1 className="text-2xl font-bold">{user?.name || "Abhinav Naman"}</h1>
-      <Badge className="bg-black text-[#7fee64]">{user?.age || "22"} years old</Badge>
+      <Badge className="card ">{user?.age || "22"} years old</Badge>
 
       {/* <h3 className="text-sm text-gray-500">{user?.age || "22"} years old</h3> */}
     </div>
-    <div className="flex gap-4 w-full border-2 border-[#7fee64] rounded-md p-4 items-center h-[80vh]">
+    <div className="flex gap-4 w-full card rounded-md p-4 items-center h-[80vh]">
       {/* AR part */}
+      {/* <DemoAR /> */}
     </div>
   </div>
   );
