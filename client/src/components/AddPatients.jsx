@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { createPatient } from "../../api/patient";
+import { createPatient } from "../api/patient";
 import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/stores/authStore";
 import { ThreeDots } from 'react-loader-spinner'
 import { useRouter } from 'next/navigation';
-import {isTokenExpired, handleLogout} from "../../hooks/useAuth";
+import {isTokenExpired, handleLogout} from "../hooks/useAuth";
 
 
-export default function AddUser() {
+export default function AddPatient() {
   const router = useRouter();
   const clearAuthData = useAuthStore((state) => state.clearAuthData);
   useAuth();
@@ -123,7 +123,7 @@ export default function AddUser() {
   return (
     <div className="flex flex-col gap-2 w-full">
 
-      <div className="w-[800px] mx-auto border-0 p-4 pt-0 md:p-8">
+      <div className=" mx-auto border-0 p-4 pt-0 md:p-8">
 
         {loading ? <>
           <ThreeDots

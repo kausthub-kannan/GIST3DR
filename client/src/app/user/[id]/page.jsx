@@ -8,12 +8,17 @@ import useAuthStore from "@/stores/authStore";
 import { ThreeDots } from "react-loader-spinner";
 import { useAuth } from "@/hooks/useAuth";
 import { DemoAR } from "@/components/DemoAR";
+import {isTokenExpired, handleLogout} from "../../../hooks/useAuth";
+import { deleteCookie } from 'cookies-next';
+
 
 
 
 
 export default function User({ params }) {
   useAuth();
+  const router = useRouter();
+  const clearAuthData = useAuthStore((state) => state.clearAuthData);
   const { id } = params; 
 
   const [user, setUser] = useState(null);
@@ -22,6 +27,22 @@ export default function User({ params }) {
   // const token = useAuthStore((state) => state.token);
 
   useEffect(() => {
+    if(isTokenExpired()){
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user_email");
+        localStorage.removeItem("user_first_name");
+        localStorage.removeItem("user_last_name");
+        deleteCookie('token');
+    }
+
+    // Clear Zustand store
+    if (clearAuthData) clearAuthData();
+
+    router.push("/sign-in");
+    console.log("User logged out successfully.");
+    }
+
     const fetchUser = async () => {
       if (!id || !token) return;
 
