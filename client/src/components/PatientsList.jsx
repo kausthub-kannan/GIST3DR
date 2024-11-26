@@ -23,7 +23,8 @@ import { motion } from "framer-motion";
 
 import usePatientsStore from "@/stores/patientStore";
 import useAuthStore from "@/stores/authStore";
-import { fetchPatients } from "@/hooks/useFetchPatients";
+// import { fetchPatients } from "@/hooks/useFetchPatients";
+import { usePatients } from "@/hooks/useFetchPatients";
 import Link from "next/link";
 import { isTokenExpired } from "@/hooks/useAuth";
 import { deleteCookie } from 'cookies-next';
@@ -33,52 +34,52 @@ import { BackgroundBeams } from "../components/ui/background-beams";
 
 export function PatientsList() {
   const router = useRouter();
-  const patients = usePatientsStore.getState().patients;
-  const token = useAuthStore.getState().token;
-  const clearAuthData = useAuthStore.getState().clearAuthData;
+  const { patients, isLoading, isError, refreshData } = usePatients();
+  // const patients = usePatientsStore.getState().patients;
+  // const token = useAuthStore.getState().token;
+  // const clearAuthData = useAuthStore.getState().clearAuthData;
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
-  const handleLoadPatients = async () => {
-    setLoading(true);
-    if (isTokenExpired()) {
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user_email");
-        localStorage.removeItem("user_first_name");
-        localStorage.removeItem("user_last_name");
-        deleteCookie('token');
-      }
+  // const handleLoadPatients = async () => {
+  //   setLoading(true);
+  //   if (isTokenExpired()) {
+  //     if (typeof window !== "undefined") {
+  //       localStorage.removeItem("token");
+  //       localStorage.removeItem("user_email");
+  //       localStorage.removeItem("user_first_name");
+  //       localStorage.removeItem("user_last_name");
+  //       deleteCookie('token');
+  //     }
 
-      // Clear Zustand store
-      if (clearAuthData) clearAuthData();
+  //     // Clear Zustand store
+  //     if (clearAuthData) clearAuthData();
 
-      router.push("/sign-in");
-      console.log("User logged out successfully.");
-    }
-    else {
-      await fetchPatients();
-    }
-    setLoading(false);
-  };
+  //     router.push("/sign-in");
+  //     console.log("User logged out successfully.");
+  //   }
+  //   else {
+  //     await fetchPatients();
+  //   }
+  //   setLoading(false);
+  // };
 
-  const handleUserRedirect = (id) => {
-    router.push(`/user/${id}`);
-  };
+  
+  // useEffect(() => {
+    //   handleLoadPatients();
+    // }, []);
 
-  useEffect(() => {
-    setLoading(true);
-    handleLoadPatients();
-    setLoading(false);
-  }, []);
+    const handleUserRedirect = (id) => {
+      router.push(`/user/${id}`);
+    };
 
   return (
     <div className="z-30">
       <div className="flex gap-2 justify-between mb-4">
         <h1 className="text-3xl text-white"> All Patients</h1>
-        <div className="flex gap-8">
-          <button onClick={handleLoadPatients} className="card  text-white text-sm flex gap-2 p-2 px-4 items-center rounded-full bg-[#7fee64] border-[#7fee64] text-[#1b1b1b] hover:scale-110">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-refresh"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" /><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" /></svg> Refresh list
+        <div className="flex gap-4">
+          <button onClick={refreshData} className="card  text-white text-sm flex gap-2 p-2 px-4 items-center rounded-full bg-[#7fee64] border-[#7fee64] text-[#1b1b1b] hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-refresh"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" /><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" /></svg>
           </button>
           <Modal className="">
             <ModalTrigger className="">
@@ -89,8 +90,8 @@ export function PatientsList() {
             {/* </Link> */}
           </ModalTrigger>
           <ModalBody className="bg-[#080b13] border-2 border-stone-500">
-          <BackgroundBeams />
 
+          <BackgroundBeams />
             <ModalContent className="">
               <AddPatient />
             </ModalContent>
@@ -100,7 +101,7 @@ export function PatientsList() {
     </div>
 
       {
-    loading ? (
+    isLoading ? (
       <div className="flex justify-center my-4">
         {/* Replace with your desired spinner or skeleton */}
         <ThreeDots height="80" width="80" color="white" ariaLabel="loading" />

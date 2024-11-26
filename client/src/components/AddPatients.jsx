@@ -138,7 +138,7 @@ export default function AddPatient() {
           />
         </> : <>
           <form className="my-8 w-full" onSubmit={handleSubmit}>
-            <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4 border-2 border-[#7fee64] p-2 rounded-md card w-full">
+            <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4 border-2 border-[#7fee64] p-2 rounded-md  w-full card">
               <label htmlFor="name" className=" shrink-0 text-lg">Name : </label>
               <input id="name" placeholder="" type="text" value={formData.name} onChange={handleChange} className="bg-transparent appearance-none outline-none border-none focus:ring-0 text-base font-medium w-full" />
               {errors.name && <p className="text-red-500">{errors.name}</p>}

@@ -9,16 +9,16 @@ import { ThreeDots } from 'react-loader-spinner'
 import { setCookie } from 'cookies-next';
 
 import { useAuthOnAuthPage } from "../../hooks/useAuth";
-import { fetchPatients } from "@/hooks/useFetchPatients";
-import usePatientsStore from "@/stores/patientStore";
 import useAuthStore from "@/stores/authStore";
+import { usePatients } from "@/hooks/useFetchPatients";
 
 // Import signup function from auth service
 export default function Signup() {
 
-    // useAuthOnAuthPage();
+    useAuthOnAuthPage();
     const router = useRouter();
     const authStore = useAuthStore.getState();
+    const { refreshData } = usePatients();
     
     const [formData, setFormData] = useState({
         first_name: "",
@@ -66,7 +66,7 @@ export default function Signup() {
 
                 //updated store right after successfull signin
                 // fetchPatients(response?.data.access_token);
-                fetchPatients();
+                refreshData();
     
                 setSuccess("Signup successful!");
                 setLoading(false); // Clear loading state

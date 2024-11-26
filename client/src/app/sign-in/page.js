@@ -7,19 +7,16 @@ import { signin } from "../../api/auth";
 import { useRouter } from 'next/navigation';
 import { ThreeDots } from 'react-loader-spinner'
 import { setCookie } from 'cookies-next';
-
-
-import { useAuthOnAuthPage } from "../../hooks/useAuth";
-import { fetchPatients } from "@/hooks/useFetchPatients";
-import usePatientsStore from "@/stores/patientStore";
 import useAuthStore from "@/stores/authStore";
+import { usePatients } from "@/hooks/useFetchPatients";
 
 export default function Signin() {
     //custom hook for page protection
-    // useAuthOnAuthPage();
+    useAuthOnAuthPage();
     
     const router = useRouter();
     const authStore = useAuthStore.getState();
+    const { refreshData } = usePatients();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -67,7 +64,7 @@ export default function Signin() {
 
                 //updated store right after successfull signin
                 // fetchPatients(response?.data.access_token);
-                await fetchPatients();
+                await refreshData();
 
                 //confirmations
                 setSuccess("Signup successful!");
