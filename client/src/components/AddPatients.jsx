@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { createPatient } from "../../api/patient";
+import { createPatient } from "../api/patient";
 import { useAuth } from "@/hooks/useAuth";
 import useAuthStore from "@/stores/authStore";
 import { ThreeDots } from 'react-loader-spinner'
 import { useRouter } from 'next/navigation';
-import {isTokenExpired, handleLogout} from "../../hooks/useAuth";
+import {isTokenExpired, handleLogout} from "../hooks/useAuth";
 
 
-export default function AddUser() {
+export default function AddPatient() {
   const router = useRouter();
   const clearAuthData = useAuthStore((state) => state.clearAuthData);
   useAuth();
@@ -123,7 +123,7 @@ export default function AddUser() {
   return (
     <div className="flex flex-col gap-2 w-full">
 
-      <div className="w-[800px] mx-auto border-0 p-4 pt-0 md:p-8">
+      <div className=" border-0 p-4 pt-0 md:p-8">
 
         {loading ? <>
           <ThreeDots
@@ -137,19 +137,19 @@ export default function AddUser() {
             wrapperClass=""
           />
         </> : <>
-          <form className="my-8" onSubmit={handleSubmit}>
-            <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4 border-2 border-[#7fee64] p-2 rounded-md card">
-              <label htmlFor="name" className=" shrink-0">Name : </label>
+          <form className="my-8 w-full" onSubmit={handleSubmit}>
+            <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4 border-2 border-[#7fee64] p-2 rounded-md card w-full">
+              <label htmlFor="name" className=" shrink-0 text-lg">Name : </label>
               <input id="name" placeholder="" type="text" value={formData.name} onChange={handleChange} className="bg-transparent appearance-none outline-none border-none focus:ring-0 text-base font-medium w-full" />
               {errors.name && <p className="text-red-500">{errors.name}</p>}
             </div>
             <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4 border-2 border-[#7fee64] p-2 rounded-md card">
-              <label htmlFor="age" className=" shrink-0">Age : </label>
+              <label htmlFor="age" className=" shrink-0 text-lg">Age : </label>
               <input id="age" placeholder="" type="number" value={formData.age} onChange={handleChange} className="bg-transparent appearance-none outline-none border-none focus:ring-0 text-base font-medium w-full" />
               {errors.age && <p className="text-red-500">{errors.age}</p>}
             </div>
             <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4 border-2 border-[#7fee64] p-2 rounded-md card">
-              <label htmlFor="dicom_file" className="">DICOM File : </label>
+              <label htmlFor="dicom_file" className=" text-lg">DICOM File : </label>
               <input
                 id="dicom_file"
                 type="file"

@@ -1,16 +1,19 @@
 import { getAllPatients } from "@/api/patient";
 import usePatientsStore from "@/stores/patientStore";
 import useAuthStore from "@/stores/authStore";
+import { isTokenExpired, handleLogout } from '@/hooks/useAuth';
 
 export const fetchPatients = async () => {
     // const token = useAuthStore.getState().token;
     const token = localStorage.getItem("token");
+    const { updatePatientsArray, setLoading } = usePatientsStore.getState();
+
     if (!token) {
         console.error("Token is required to fetch patients");
+        handleLogout();
         return;
     }
 
-    const { updatePatientsArray, setLoading } = usePatientsStore.getState();
 
     try {
         setLoading(true); // Set loading to true before fetching

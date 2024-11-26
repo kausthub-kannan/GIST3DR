@@ -88,9 +88,9 @@ export default function Signin() {
 
 
     return (
-        <div className="flex justify-center items-center w-full h-full mt-8 bg-[#7fee64] border-[#7fee64] rounded-xl">
-            <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 border-0 bg-[#7fee64] border-[#7fee64]">
-                <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
+        <div className=" flex justify-center ">
+            <div className="card max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 border-0 bg-[#7fee64] border-[#7fee64]">
+                <h2 className="font-bold text-xl">
                     Welcome to KKs Lab
                 </h2>
                 {loading ? <>
@@ -107,12 +107,12 @@ export default function Signin() {
                 </> : <>
                     <form className="my-8" onSubmit={handleSubmit}>
                         <LabelInputContainer className="mb-4">
-                            <Label htmlFor="email">Email Address</Label>
-                            <Input id="email" placeholder="projectmayhem@fc.com" type="email" onChange={handleChange} value={formData.email} />
+                            <Label htmlFor="email" className="text-white">Email Address</Label>
+                            <Input id="email" placeholder="projectmayhem@fc.com" type="email" onChange={handleChange} value={formData.email} className="card text-white"/>
                         </LabelInputContainer>
                         <LabelInputContainer className="mb-4">
-                            <Label htmlFor="password">Password</Label>
-                            <Input id="password" placeholder="••••••••" type="password" onChange={handleChange} value={formData.password} />
+                            <Label htmlFor="password" className="text-white">Password</Label>
+                            <Input id="password" placeholder="••••••••" type="password" onChange={handleChange} value={formData.password} className="card text-white"/>
                         </LabelInputContainer>
 
                         {error && <p className="text-red-500">{error}</p>}
@@ -125,7 +125,7 @@ export default function Signin() {
                         </button>
                     </form>
 
-                    <a href="/sign-up" className="text-black">sign up</a>
+                    <a href="/sign-up" className="text-white card p-2 rounded-full px-4">sign up</a>
                 </>}
 
             </div>
