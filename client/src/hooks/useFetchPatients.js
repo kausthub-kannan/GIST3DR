@@ -1,4 +1,4 @@
-import { getPatients } from "@/api/patient";
+import { getAllPatients } from "@/api/patient";
 import usePatientsStore from "@/stores/patientStore";
 import useAuthStore from "@/stores/authStore";
 import { isTokenExpired, handleLogout } from "@/hooks/useAuth";

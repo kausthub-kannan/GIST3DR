@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from routes import patients, auth
+from routes import patients, auth, users
 
 load_dotenv()
 
@@ -22,6 +22,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(patients.router)
+app.include_router(users.router)
 
 
 @app.get("/", response_class=JSONResponse)

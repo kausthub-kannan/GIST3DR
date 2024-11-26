@@ -27,10 +27,9 @@ import useAuthStore from "@/stores/authStore";
 import { usePatients } from "@/hooks/useFetchPatients";
 import Link from "next/link";
 import { isTokenExpired } from "@/hooks/useAuth";
-import { deleteCookie } from 'cookies-next';
+import { deleteCookie } from "cookies-next";
 import AddPatient from "./AddPatients";
 import { BackgroundBeams } from "../components/ui/background-beams";
-
 
 export function PatientsList() {
   const router = useRouter();
@@ -41,6 +40,16 @@ export function PatientsList() {
 
   // const [loading, setLoading] = useState(false);
 
+  const handleLoadPatients = async () => {
+    setLoading(true);
+    if (isTokenExpired()) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user_email");
+        localStorage.removeItem("user_first_name");
+        localStorage.removeItem("user_last_name");
+        deleteCookie("token");
+      }
   // const handleLoadPatients = async () => {
   //   setLoading(true);
   //   if (isTokenExpired()) {
@@ -55,6 +64,13 @@ export function PatientsList() {
   //     // Clear Zustand store
   //     if (clearAuthData) clearAuthData();
 
+      router.push("/sign-in");
+      console.log("User logged out successfully.");
+    } else {
+      await fetchPatients();
+    }
+    setLoading(false);
+  };
   //     router.push("/sign-in");
   //     console.log("User logged out successfully.");
   //   }
@@ -83,9 +99,26 @@ export function PatientsList() {
           </button>
           <Modal className="">
             <ModalTrigger className="">
-            {/* <Link href='/add-patient'> */}
+              {/* <Link href='/add-patient'> */}
               <button className="card  text-white text-sm flex gap-2 p-2 px-4 rounded-full bg-[#7fee64] border-[#7fee64] text-[#1b1b1b] hover:scale-110 items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-circle-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M9 12h6" /><path d="M12 9v6" /></svg> Add Patient
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  className="icon icon-tabler icons-tabler-outline icon-tabler-circle-plus"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                  <path d="M9 12h6" />
+                  <path d="M12 9v6" />
+                </svg>{" "}
+                Add Patient
               </button>
             {/* </Link> */}
           </ModalTrigger>

@@ -1,14 +1,16 @@
-from typing import List, Annotated
+import uuid
+from typing import List, Annotated, Optional
+from uuid import uuid4
 
 from dotenv import load_dotenv
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.params import Query
 from pydicom.filebase import DicomBytesIO
 from sqlalchemy import select
 from sqlmodel import Session
 from database.schemas.tables import Patient
-from utils.exporter import OBJExporter
+from utils.exporter import OBJExporter, masks_to_gif
 from utils.dicom import read_dicom_slices
 from database.utils.storage import check_file_exists
 from database.utils.connect import DBConfig
@@ -81,31 +83,64 @@ async def get_patient(
         width_millimeter=patient.width_millimeter,
         thickness_millimeter=patient.thickness_millimeter,
         area_millimeter_sq=patient.area_millimeter_sq,
-        cancellous_url=(
-            supabase.storage.from_("bone_models").create_signed_url(
-                f"{patient_id}/cancellous.obj", 12000
-            )["signedURL"]
-            if check_file_exists(
-                supabase, "bone_models", f"{patient_id}/cancellous.obj"
-            )
-            else None
-        ),
-        cortical_url=(
-            supabase.storage.from_("bone_models").create_signed_url(
-                f"{patient_id}/cortical.obj", 12000
-            )["signedURL"]
-            if check_file_exists(supabase, "bone_models", f"{patient_id}/cortical.obj")
-            else None
-        ),
-        nerve_canal_url=(
-            supabase.storage.from_("bone_models").create_signed_url(
-                f"{patient_id}/nerve_canal.obj", 12000
-            )["signedURL"]
-            if check_file_exists(
-                supabase, "bone_models", f"{patient_id}/nerve_canal.obj"
-            )
-            else None
-        ),
+        modal_urls={
+            "cancellous": (
+                supabase.storage.from_("bone_models").create_signed_url(
+                    f"{patient_id}/cancellous.obj", 12000
+                )["signedURL"]
+                if check_file_exists(
+                    supabase, "bone_models", f"{patient_id}/cancellous.obj"
+                )
+                else None
+            ),
+            "cortical": (
+                supabase.storage.from_("bone_models").create_signed_url(
+                    f"{patient_id}/cortical.obj", 12000
+                )["signedURL"]
+                if check_file_exists(
+                    supabase, "bone_models", f"{patient_id}/cortical.obj"
+                )
+                else None
+            ),
+            "nerve_canal": (
+                supabase.storage.from_("bone_models").create_signed_url(
+                    f"{patient_id}/nerve_canal.obj", 12000
+                )["signedURL"]
+                if check_file_exists(
+                    supabase, "bone_models", f"{patient_id}/nerve_canal.obj"
+                )
+                else None
+            ),
+        },
+        gif_urls={
+            "cancellous": (
+                supabase.storage.from_("bone_models").create_signed_url(
+                    f"{patient_id}/cancellous.gif", 12000
+                )["signedURL"]
+                if check_file_exists(
+                    supabase, "bone_models", f"{patient_id}/cancellous.gif"
+                )
+                else None
+            ),
+            "cortical": (
+                supabase.storage.from_("bone_models").create_signed_url(
+                    f"{patient_id}/cortical.gif", 12000
+                )["signedURL"]
+                if check_file_exists(
+                    supabase, "bone_models", f"{patient_id}/cortical.gif"
+                )
+                else None
+            ),
+            "nerve_canal": (
+                supabase.storage.from_("bone_models").create_signed_url(
+                    f"{patient_id}/nerve_canal.gif", 12000
+                )["signedURL"]
+                if check_file_exists(
+                    supabase, "bone_models", f"{patient_id}/nerve_canal.gif"
+                )
+                else None
+            ),
+        },
     )
 
     logger.info("Retrieved patient")
@@ -117,7 +152,8 @@ async def get_patient(
 async def create_patient(
     auth: AuthDep,
     session: SessionDep,
-    patient: Patient = Depends(),
+    name: str = Form(...),
+    age: int = Form(...),
     dicom_file: UploadFile = File,
 ) -> Patient:
     """Create a new patient"""
@@ -130,8 +166,18 @@ async def create_patient(
     masks, measurements = masks_generator_pipeline(slices)
     logger.info("Generated masks and measurements")
 
-    patient.height_millimeter = measurements[2]["height"]
-    patient.width_millimeter = measurements[2]["width"]
+    patient = Patient(name=name, age=age)
+    patient.id = str(uuid4())
+    patient.height_millimeter = round(
+        sum(measurements[2]["height"]) / len(measurements[2]["height"]), 2
+    )
+    patient.width_millimeter = round(
+        sum(measurements[2]["width"]) / len(measurements[2]["width"]), 2
+    )
+    patient.area_millimeter_sq = round(
+        sum(measurements[2]["area"]) / len(measurements[2]["area"]), 2
+    ).item()
+    patient.thickness_millimeter = round(len(slices) * 0.6, 2)  # 2mm per slice
     session.add(patient)
 
     obj_exporter = OBJExporter()
@@ -140,14 +186,22 @@ async def create_patient(
         for label, mask_list in masks.items():
             if mask_list:
                 obj_content = obj_exporter.save_multiple_masks_to_obj(mask_list)
-                obj_file = f"{patient.id}_{label_names[label]}.obj"
+                obj_file = f"{patient.id}/{label_names[label-1]}.obj"
                 supabase.storage.from_("bone_models").upload(
                     path=obj_file,
                     file=obj_content.encode(),
                     file_options={"contentType": "application/x-tgif"},
                 )
 
-        logger.info("Saved OBJ files to storage")
+                gif_content = masks_to_gif(mask_list, label)
+                gif_file = f"{patient.id}/{label_names[label-1]}.gif"
+                supabase.storage.from_("bone_models").upload(
+                    path=gif_file,
+                    file=gif_content,
+                    file_options={"contentType": "image/gif"},
+                )
+
+        logger.info("Saved OBJ and GIF files to storage")
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -163,34 +217,149 @@ async def create_patient(
 
 @router.delete("/{patient_id}")
 async def delete_patient(patient_id: str, session: SessionDep, auth: AuthDep):
-    """Delete a patient by ID"""
-    patient = session.get(Patient, patient_id)
-    if not patient:
-        raise HTTPException(status_code=404, detail="Patient not found")
-    session.delete(patient)
-    supabase.storage.from_("bone_models").remove([f"{patient_id}"])
-    session.commit()
-    session.refresh(patient)
-    logger.info("Deleted patient")
-    return {"message": "Patient deleted successfully"}
+    try:
+        patient = session.get(Patient, patient_id)
+        if not patient:
+            raise HTTPException(status_code=404, detail="Patient not found")
+
+        try:
+            storage_response = supabase.storage.from_("bone_models").list(patient_id)
+
+            if isinstance(storage_response, list):
+                file_paths = [
+                    f"{patient_id}/{file['name']}" for file in storage_response
+                ]
+
+                if file_paths:
+                    supabase.storage.from_("bone_models").remove(file_paths)
+
+            supabase.storage.from_("bone_models").remove([f"{patient_id}"])
+
+        except Exception as storage_error:
+            logger.error(
+                f"Storage deletion error for patient {patient_id}: {str(storage_error)}"
+            )
+
+        session.delete(patient)
+        session.commit()
+
+        logger.info(f"Successfully deleted patient {patient_id} and associated files")
+        return {"message": "Patient deleted successfully"}
+
+    except Exception as e:
+        session.rollback()
+        logger.error(f"Error deleting patient {patient_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error deleting patient: {str(e)}")
 
 
 @router.put("/{patient_id}")
 async def update_patient(
-    patient_id: str, updated_patient: Patient, session: SessionDep, auth: AuthDep
+    auth: AuthDep,
+    session: SessionDep,
+    name: str = Form(...),
+    age: int = Form(...),
+    dicom_file: Optional[UploadFile] = File(None),
 ) -> Patient:
-    """Update a patient by ID"""
-    existing_patient = session.get(Patient, patient_id)
+    """
+    Update a patient by ID
+
+    Args:
+        auth: Authentication dependency
+        session: Database session dependency
+        patient: Patient model from path parameter
+        dicom_file: Optional DICOM file upload
+
+    Returns:
+        Updated Patient object
+
+    Raises:
+        HTTPException: If patient not found or processing fails
+    """
+    # Validate patient exists
+    patient = Patient(id=id, name=name, age=age)
+    existing_patient = session.get(Patient, patient.id)
     if not existing_patient:
+        logger.error(f"Patient {patient.id} not found")
         raise HTTPException(
-            status_code=404, detail=f"Patient with ID {patient_id} not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Patient not found"
         )
 
-    for key, value in updated_patient.dict(exclude_unset=True).items():
-        setattr(existing_patient, key, value)
+    if patient.name:
+        existing_patient.name = patient.name
 
-    session.add(existing_patient)
-    session.commit()
-    session.refresh(existing_patient)
-    logger.info("Updated patient")
+    if patient.age:
+        existing_patient.age = patient.age
+
+    # Process DICOM file if provided
+    if dicom_file:
+        try:
+            dicom_bytes = await dicom_file.read()
+            dicom_buffer = DicomBytesIO(dicom_bytes)
+            slices = read_dicom_slices(dicom_buffer)
+            logger.info(f"Read {len(slices)} slices from DICOM file")
+
+            masks, measurements = masks_generator_pipeline(slices)
+            logger.info("Generated masks and measurements")
+
+            existing_patient.bone_density_gram_per_centimeter_sq = (
+                patient.bone_density_gram_per_centimeter_sq
+            )
+            existing_patient.height_millimeter = round(
+                sum(measurements[2]["height"]) / len(measurements[2]["height"]), 2
+            )
+            existing_patient.width_millimeter = round(
+                sum(measurements[2]["width"]) / len(measurements[2]["width"]), 2
+            )
+            existing_patient.area_millimeter_sq = round(
+                sum(measurements[2]["area"]) / len(measurements[2]["area"]), 2
+            ).item()
+            existing_patient.thickness_millimeter = round(
+                len(slices) * 0.6, 2
+            )  # 2mm per slice
+
+            obj_exporter = OBJExporter()
+            label_names = ["cancellous", "cortical", "nerve_canal"]
+
+            for label, mask_list in masks.items():
+                if not mask_list:
+                    continue
+
+                obj_file = f"{patient.id}/{label_names[label - 1]}.obj"
+
+                try:
+                    obj_content = obj_exporter.save_multiple_masks_to_obj(mask_list)
+                    supabase.storage.from_("bone_models").update(
+                        path=obj_file,
+                        file=obj_content.encode(),
+                        file_options={"contentType": "application/x-tgif"},
+                    )
+
+                    gif_content = masks_to_gif(mask_list, label)
+                    gif_file = f"{patient.id}/{label_names[label-1]}.gif"
+                    supabase.storage.from_("bone_models").upload(
+                        path=gif_file,
+                        file=gif_content,
+                        file_options={"contentType": "image/gif"},
+                    )
+
+                except Exception as e:
+                    logger.error(f"Failed to save OBJ file {obj_file}: {str(e)}")
+                    raise HTTPException(
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=f"Failed to save OBJ file: {str(e)}",
+                    )
+
+            logger.info("Saved OBJ files to storage")
+
+            session.commit()
+            session.refresh(existing_patient)
+
+        except Exception as e:
+            logger.error(f"Failed to process DICOM update: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to process patient update: {str(e)}",
+            )
+
+    logger.info(f"Successfully updated patient {patient.id}")
     return existing_patient
