@@ -7,7 +7,6 @@ import { Badge } from "../../../components/ui/badge";
 import useAuthStore from "@/stores/authStore";
 import { ThreeDots } from "react-loader-spinner";
 import { useAuth } from "@/hooks/useAuth";
-import { DemoAR } from "@/components/DemoAR";
 import {isTokenExpired, handleLogout} from "../../../hooks/useAuth";
 import { deleteCookie } from 'cookies-next';
 

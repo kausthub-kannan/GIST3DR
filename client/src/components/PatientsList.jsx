@@ -28,6 +28,7 @@ import Link from "next/link";
 import { isTokenExpired } from "@/hooks/useAuth";
 import { deleteCookie } from 'cookies-next';
 import AddPatient from "./AddPatients";
+import { BackgroundBeams } from "../components/ui/background-beams";
 
 
 export function PatientsList() {
@@ -87,7 +88,9 @@ export function PatientsList() {
               </button>
             {/* </Link> */}
           </ModalTrigger>
-          <ModalBody className="bg-black w-[800px]">
+          <ModalBody className="bg-[#080b13] border-2 border-stone-500">
+          <BackgroundBeams />
+
             <ModalContent className="">
               <AddPatient />
             </ModalContent>
