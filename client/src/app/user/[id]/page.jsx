@@ -59,6 +59,16 @@ export default function User() {
   const { user, loading, error } = usePatientData();
   const [selectedBoneType, setSelectedBoneType] = React.useState("cancellous");
 
+  const handleARView = (e) => {
+    e.preventDefault();
+    const screwHeight = user.height_millimeter;
+    const screwRadius = user.width_millimeter;
+
+    router.push(
+      `/user/${user.id}/ar?height=${screwHeight}&radius=${screwRadius}`
+    );
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -94,10 +104,18 @@ export default function User() {
               screwRadius={user.width_millimeter}
             />
           </Card>
+          <Button
+            variant="outline"
+            onClick={handleARView}
+            className="hover:scale-105 transition-transform duration-200 bg-white text-black mt-3 mx-auto block"
+          >
+            View in AR
+          </Button>
         </div>
 
         <div className="w-2/3 h-full flex flex-col gap-4 items-center">
           <Bone3D modelPath={user.modal_urls[selectedBoneType]} />
+
           <BoneTypeSelector
             selectedType={selectedBoneType}
             onTypeChange={setSelectedBoneType}
