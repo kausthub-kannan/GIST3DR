@@ -19,13 +19,17 @@ const Screw3D = ({
     const height = container.clientHeight;
 
     // Setup renderer with container dimensions
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true, // Enable transparency
+    });
     renderer.setSize(width, height);
     mountRef.current.appendChild(renderer.domElement);
 
     // Setup scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0);
+    // Remove or comment out the background color
+    // scene.background = new THREE.Color(0xf0f0f0);
 
     // Setup camera with container aspect ratio
     const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 20);
@@ -120,7 +124,9 @@ const Screw3D = ({
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      mountRef.current.removeChild(renderer.domElement);
+      if (mountRef.current) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
       renderer.dispose();
     };
   }, [screwHeight, screwRadius, headHeight]);

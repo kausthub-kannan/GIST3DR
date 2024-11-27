@@ -70,15 +70,14 @@ const Bone3D = ({ modelPath }) => {
     );
 
     // Position camera at an angle
-    camera.position.set(5, 5, 5); // Move camera back and up for a better initial view
-    camera.lookAt(0, 0, 0); // Look at the center
+    camera.position.set(15, 15, 15); // Changed from (5, 5, 5) to zoom out further
 
     // Add OrbitControls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.minDistance = 0.5;
-    controls.maxDistance = 20;
+    controls.minDistance = 4; // Increased from 0.5
+    controls.maxDistance = 80; // Increased from 20
     controls.enableZoom = true;
     controls.zoomSpeed = 1.0;
     controls.target.set(0, 0, 0); // Set the target point to orbit around
