@@ -72,12 +72,12 @@ export function PatientsList() {
 
   return (
     <div className="z-30">
-      <div className="flex gap-2 justify-between mb-4">
+      <div className="flex items-center gap-2 justify-between mb-4">
         <h1 className="text-3xl text-white"> All Patients</h1>
         <div className="flex gap-8">
-          <button
+          {/* <button
             onClick={handleLoadPatients}
-            className="card  text-white text-sm flex gap-2 p-2 px-4 items-center rounded-full bg-[#7fee64] border-[#7fee64] text-[#1b1b1b] hover:scale-110"
+            className="card items-center text-white text-sm flex gap-2 rounded-full p-6 py-4 bg-[#7fee64] border-[#7fee64] text-[#1b1b1b] hover:scale-110"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -96,11 +96,10 @@ export function PatientsList() {
               <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
             </svg>{" "}
             Refresh list
-          </button>
+          </button> */}
           <Modal className="">
             <ModalTrigger className="">
-              {/* <Link href='/add-patient'> */}
-              <button className="card  text-white text-sm flex gap-2 p-2 px-4 rounded-full bg-[#7fee64] border-[#7fee64] text-[#1b1b1b] hover:scale-110 items-center">
+              <button className="card items-center text-white text-sm flex gap-2 p-6 py-4 rounded-full bg-[#7fee64] border-[#7fee64] text-[#1b1b1b] hover:scale-110">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -120,7 +119,6 @@ export function PatientsList() {
                 </svg>{" "}
                 Add Patient
               </button>
-              {/* </Link> */}
             </ModalTrigger>
             <ModalBody className="bg-[#080b13] border-2 border-stone-500">
               <BackgroundBeams />
@@ -153,30 +151,12 @@ export function PatientsList() {
             </TableHeader>
             <TableBody>
               {patients.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center text-white">
-                    <Link href="/add-patient">
-                      <button className="card items-center text-white text-sm flex gap-2 p-2 px-6 rounded-full bg-[#7fee64] border-[#7fee64] text-[#1b1b1b] hover:scale-110">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          className="icon icon-tabler icons-tabler-outline icon-tabler-circle-plus"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                          <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-                          <path d="M9 12h6" />
-                          <path d="M12 9v6" />
-                        </svg>{" "}
-                        Add Patient
-                      </button>
-                    </Link>
+                <TableRow className="h-[50vh]">
+                  <TableCell
+                    colSpan={7}
+                    className="text-center text-white align-middle text-xl"
+                  >
+                    No patients found. Add a patient to get started.
                   </TableCell>
                 </TableRow>
               ) : (
