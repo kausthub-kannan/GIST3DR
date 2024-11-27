@@ -77,7 +77,8 @@ const ScrewAR = ({
     screwGroup.position.y = 0;
     scene.add(screwGroup);
 
-    document.body.appendChild(ARButton.createButton(renderer));
+    const arButton = ARButton.createButton(renderer);
+    document.body.appendChild(arButton);
 
     const handleResize = () => {
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -93,6 +94,7 @@ const ScrewAR = ({
     return () => {
       renderer.setAnimationLoop(null);
       if (renderer.domElement) document.body.removeChild(renderer.domElement);
+      if (arButton) document.body.removeChild(arButton);
       window.removeEventListener("resize", handleResize);
     };
   }, [screwHeight, screwRadius, headHeight]);
