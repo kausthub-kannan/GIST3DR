@@ -34,7 +34,7 @@ import { usePatientData } from "@/hooks/usePatientData";
 // }
 
 const BoneTypeSelector = ({ selectedType, onTypeChange, availableTypes }) => (
-  <div className="flex gap-4">
+  <div className="flex flex-wrap gap-2">
     {Object.entries(availableTypes).map(([type, url]) => (
       <Button
         key={type}
@@ -42,7 +42,7 @@ const BoneTypeSelector = ({ selectedType, onTypeChange, availableTypes }) => (
         onClick={() => onTypeChange(type)}
         disabled={!url}
         className={cn(
-          "hover:scale-105 transition-transform duration-200",
+          "hover:scale-105 transition-transform duration-200 text-sm",
           selectedType === type && "bg-white text-black"
         )}
       >
@@ -86,18 +86,18 @@ export default function User() {
   }
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <Card className="flex gap-4 w-full p-4 items-center">
-        <h1 className="text-2xl font-bold">{user.name}</h1>
-        <div className="flex gap-4 text-sm">
+    <div className="flex flex-col gap-4 w-full p-4">
+      <Card className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full p-4 items-center">
+        <h1 className="text-xl sm:text-2xl font-bold">{user.name}</h1>
+        <div className="flex flex-wrap gap-2 sm:gap-4 text-sm">
           <p>Screw Height: {user.height_millimeter}mm</p>
           <p>Screw Width: {user.width_millimeter}mm</p>
         </div>
-        <Badge className="ml-auto text-sm">Age: {user.age}</Badge>
+        <Badge className="sm:ml-auto text-sm">Age: {user.age}</Badge>
       </Card>
 
-      <div className="flex gap-4 w-full card rounded-md p-4 items-center h-[80vh]">
-        <div className="w-1/3 h-full">
+      <div className="flex flex-col lg:flex-row gap-4 w-full card rounded-md p-4 items-center min-h-[80vh]">
+        <div className="w-full lg:w-1/3 h-[300px] lg:h-full">
           <Card>
             <Screw3D
               screwHeight={user.height_millimeter}
@@ -107,13 +107,13 @@ export default function User() {
           <Button
             variant="outline"
             onClick={handleARView}
-            className="hover:scale-105 transition-transform duration-200 bg-white text-black mt-3 mx-auto block"
+            className="hover:scale-105 transition-transform duration-200 bg-white text-black mt-3 mx-auto block w-full sm:w-auto"
           >
             View in AR
           </Button>
         </div>
 
-        <div className="w-2/3 h-full flex flex-col gap-4 items-center">
+        <div className="w-full lg:w-2/3 h-[400px] lg:h-full flex flex-col gap-4 items-center">
           <Bone3D modelPath={user.modal_urls[selectedBoneType]} />
 
           <BoneTypeSelector
