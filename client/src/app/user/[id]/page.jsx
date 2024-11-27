@@ -11,6 +11,8 @@ import { isTokenExpired, handleLogout } from "../../../hooks/useAuth";
 import { deleteCookie } from "cookies-next";
 import Screw3D from "@/components/models/screw-3d";
 import Bone3D from "@/components/models/bone-3d";
+import { Button } from "../../../components/ui/button";
+import { Card } from "../../../components/ui/card";
 
 // sample data from getPatient api
 // {
@@ -37,13 +39,24 @@ export default function User() {
   useAuth();
   const router = useRouter();
   const clearAuthData = useAuthStore((state) => state.clearAuthData);
-  const id = router.query?.id;
+  const [id, setId] = useState(null);
+
+  // Move all client-side operations into useEffect
+  useEffect(() => {
+    // Get ID from URL after component mounts
+    const pathSegments = window.location.pathname.split("/");
+    const urlId = pathSegments[pathSegments.length - 1];
+    setId(urlId);
+  }, []);
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  // const token = useAuthStore((state) => state.token);
+  const [token, setToken] = useState(null);
+
+  // Handle token initialization
+  useEffect(() => {
+    setToken(localStorage.getItem("token"));
+  }, []);
 
   useEffect(() => {
     if (isTokenExpired()) {
@@ -74,43 +87,75 @@ export default function User() {
         setLoading(false);
       }
     };
-
     fetchUser();
   }, [id, token]);
 
-  if (loading) {
+  const [selectedBoneType, setSelectedBoneType] = useState("cancellous");
+
+  // initial render check
+  if (!id || loading) {
     return (
-      <>
+      <div className="flex justify-center items-center h-screen">
         <ThreeDots height="80" width="80" color="white" ariaLabel="loading" />
-      </>
+      </div>
     );
   }
 
   if (!user) {
-    return <div>No user data found.</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        No user data found.
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <div className="card flex gap-4 w-full border-2  rounded-md p-4 items-center">
-        <h1 className="text-2xl font-bold">{user?.name || "Abhinav Naman"}</h1>
-        <Badge className="card ">{user?.age || "22"} years old</Badge>
-
-        {/* <h3 className="text-sm text-gray-500">{user?.age || "22"} years old</h3> */}
+      <div className="card flex gap-4 w-full border-2 rounded-md p-4 items-center">
+        <h1 className="text-2xl font-bold">{user.name}</h1>
+        <Badge className="card ">{user.age} years old</Badge>
       </div>
       <div className="flex gap-4 w-full card rounded-md p-4 items-center h-[80vh]">
-        <div className="w-1/2 h-full">
-          Screw 3D Render
-          <Screw3D
-            screwHeight={user.height_millimeter}
-            screwRadius={user.width_millimeter}
-          />
+        <div className="w-1/3 h-full">
+          <Card>
+            <Screw3D
+              screwHeight={user.height_millimeter}
+              screwRadius={user.width_millimeter}
+            />
+          </Card>
           {user.name} Screw Height: {user.height_millimeter}mm
           <br />
           {user.name} Screw Width: {user.width_millimeter}mm
         </div>
-        <div className="w-1/2 h-full">
-          <Bone3D modelPath={user.modal_urls.cancellous} />
+        <div className="w-2/3 h-full flex flex-col gap-4 items-center">
+          {selectedBoneType === "cancellous" && (
+            <Bone3D modelPath={user.modal_urls.cancellous} />
+          )}
+          {selectedBoneType === "cortical" && (
+            <Bone3D modelPath={user.modal_urls.cortical} />
+          )}
+          <div className="flex gap-4">
+            <Button
+              variant="outline"
+              onClick={() => setSelectedBoneType("cancellous")}
+              className={cn(
+                "hover:scale-105 transition-transform duration-200",
+                selectedBoneType === "cancellous" && "bg-white text-black"
+              )}
+            >
+              Cancellous
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setSelectedBoneType("cortical")}
+              className={cn(
+                "hover:scale-105 transition-transform duration-200",
+                selectedBoneType === "cortical" && "bg-white text-black"
+              )}
+            >
+              Cortical
+            </Button>
+          </div>
         </div>
       </div>
     </div>
