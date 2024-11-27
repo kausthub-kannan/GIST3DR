@@ -9,7 +9,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { setCookie } from "cookies-next";
 
 import { useAuthOnAuthPage } from "../../hooks/useAuth";
-import { fetchPatients } from "@/hooks/useFetchPatients";
+import { useFetchPatients } from "@/hooks/useFetchPatients";
 import usePatientsStore from "@/stores/patientStore";
 import useAuthStore from "@/stores/authStore";
 
@@ -26,6 +26,8 @@ export default function Signin() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const { fetchPatients } = useFetchPatients();
 
   const handleChange = (e) => {
     const { id, value } = e.target;

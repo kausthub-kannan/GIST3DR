@@ -8,7 +8,7 @@ import "./styles.css";
 //hooks
 import { useAuth } from "@/hooks/useAuth";
 import { useFetchPatients } from "@/hooks/useFetchPatients";
-import { isTokenExpired, handleLogout } from "../hooks/useAuth";
+import { isTokenExpired } from "../hooks/useAuth";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/stores/authStore";
 import { deleteCookie } from "cookies-next";

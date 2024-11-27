@@ -24,7 +24,6 @@ import { signout } from "@/api/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../hooks/useAuth";
-import { handleLogout } from "../hooks/useAuth";
 
 export const Sidebar = () => {
   //   useAuth();
