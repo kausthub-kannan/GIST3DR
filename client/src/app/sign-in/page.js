@@ -18,7 +18,6 @@ export default function Signin() {
   // useAuthOnAuthPage();
 
   const router = useRouter();
-  const authStore = useAuthStore.getState();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -37,15 +36,10 @@ export default function Signin() {
     e.preventDefault();
     setLoading(true);
     try {
-      console.log(formData);
-
       const response = await signin(formData);
 
       if (response) {
-        console.log("ok");
-        console.log(response);
-
-        //local storage or should i use zustand?
+        // Store in localStorage
         localStorage.setItem("token", response?.data.access_token);
         localStorage.setItem("user_email", response?.data.user.email);
         localStorage.setItem("user_first_name", response?.data.user.first_name);
@@ -56,7 +50,7 @@ export default function Signin() {
           maxAge: 60 * 60 * 24 * 7,
         }); // 7 days
 
-        //ye le kar leye zustand
+        const authStore = useAuthStore.getState();
         authStore.setAuthData({
           isAuthenticated: true,
           token: response?.data.access_token,
@@ -65,20 +59,16 @@ export default function Signin() {
           user_last_name: response?.data.user.last_name,
         });
 
-        //updated store right after successfull signin
-        // fetchPatients(response?.data.access_token);
         await fetchPatients();
 
-        //confirmations
         setSuccess("Signup successful!");
         setError(null);
-        setLoading(false); // Clear any existing errors
-        console.log("Form submitted:", response.data);
+        setLoading(false);
         router.push("/");
       }
     } catch (err) {
       setError("Signup failed. Please try again.");
-      setLoading(false); // Handle errors
+      setLoading(false);
       console.error("Error during signup:", err);
     }
   };
