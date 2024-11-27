@@ -61,19 +61,16 @@ const Screw3D = ({
     // Adjust material properties for better visibility
     const screwMaterial = new THREE.MeshStandardMaterial({
       color: 0xc0c0c0,
-      metalness: 0.7, // Slightly reduced metalness
-      roughness: 0.3, // Slightly increased roughness
+      metalness: 0.7,
+      roughness: 0.3,
     });
 
-    // Scale millimeter values to match current scene scale (roughly 1mm = 0.01 units)
     const scaledHeight = screwHeight * 0.01;
     const scaledRadius = screwRadius * 0.01;
-    const scaledHeadHeight = headHeight; // Not adjusting the head height
+    const scaledHeadHeight = headHeight;
 
-    // Updated screw dimensions using scaled values
     const headRadius = scaledRadius * 1.4;
 
-    // Create screw head with silver material
     const headGeometry = new THREE.CylinderGeometry(
       headRadius,
       headRadius,
@@ -83,7 +80,6 @@ const Screw3D = ({
     const head = new THREE.Mesh(headGeometry, screwMaterial);
     head.position.y = scaledHeight / 2 + scaledHeadHeight / 2;
 
-    // Create screw body
     const bodyGeometry = new THREE.CylinderGeometry(
       scaledRadius,
       scaledRadius * 0.8,
@@ -92,16 +88,41 @@ const Screw3D = ({
     );
     const body = new THREE.Mesh(bodyGeometry, screwMaterial);
 
-    // Group all parts together
     const screwGroup = new THREE.Group();
     screwGroup.add(head);
     screwGroup.add(body);
-
-    // Position the screw
-    // screwGroup.rotation.x = -Math.PI / 2;
     scene.add(screwGroup);
 
-    // Update animation loop
+    // Function to create text labels using THREE.Sprite
+    const createTextSprite = (text, position) => {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      context.font = "Bold 20px Arial";
+      context.fillStyle = "white";
+      context.fillText(text, 10, 50);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+      const sprite = new THREE.Sprite(spriteMaterial);
+      sprite.position.set(position.x, position.y, position.z);
+      sprite.scale.set(0.7, 0.5, 1); // Adjust scale based on your scene
+      return sprite;
+    };
+
+    // Add height label
+    const heightLabel = createTextSprite(
+      `Height: ${screwHeight}mm`,
+      new THREE.Vector3(0, scaledHeight + 0.1, 0)
+    );
+    scene.add(heightLabel);
+
+    // Add width label
+    const widthLabel = createTextSprite(
+      `Width: ${(screwRadius * 2) / 2}mm`,
+      new THREE.Vector3(scaledRadius * 3, 0, 0.2)
+    );
+    scene.add(widthLabel);
+
     const animate = () => {
       requestAnimationFrame(animate);
       // screwGroup.rotation.z += 0.01; // Add rotation to see the screw better
