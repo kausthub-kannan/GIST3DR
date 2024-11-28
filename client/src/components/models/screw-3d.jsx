@@ -33,7 +33,8 @@ const Screw3D = ({
 
     // Setup camera with container aspect ratio
     const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 20);
-    camera.position.z = 1;
+    camera.position.y = 0;
+    camera.position.z = 1.3;
 
     // Add OrbitControls
     const controls = new OrbitControls(camera, renderer.domElement);
