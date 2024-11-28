@@ -15,10 +15,9 @@ import { usePatients } from "@/hooks/useFetchPatients";
 // Import signup function from auth service
 export default function Signup() {
 
-    useAuthOnAuthPage();
     const router = useRouter();
     const authStore = useAuthStore.getState();
-    const { refreshData } = usePatients();
+    // const { refreshData } = usePatients();
     
     const [formData, setFormData] = useState({
         first_name: "",
@@ -66,7 +65,7 @@ export default function Signup() {
 
                 //updated store right after successfull signin
                 // fetchPatients(response?.data.access_token);
-                refreshData();
+                // refreshData();
     
                 setSuccess("Signup successful!");
                 setLoading(false); // Clear loading state
@@ -94,7 +93,7 @@ export default function Signup() {
             <div className="flex justify-center items-center w-full h-full mt-8 ">
                 <div className="card max-w-xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8">
                     <h2 className="font-bold text-xl">
-                        Welcome to KKs Lab
+                        Welcome to GIST3DR
                     </h2>
                     {loading ? <>
                         <ThreeDots

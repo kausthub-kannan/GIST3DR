@@ -12,9 +12,10 @@ import { isTokenExpired, handleLogout } from "../hooks/useAuth";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/stores/authStore";
 import { deleteCookie } from "cookies-next";
+import { Sidebar } from "@/components/Sidebar";
 
 export default function Home() {
-  useAuth();
+  // useAuth();
   const router = useRouter();
   const clearAuthData = useAuthStore((state) => state.clearAuthData);
   useEffect(() => {
@@ -36,9 +37,12 @@ export default function Home() {
   }, []);
 
   return (
-    <div className=" h-screen relative flex flex-col w-full items-start justify-start">
-      <div className="card w-full min-h-[600px] overflow-hidden relative rounded-2xl p-4 text-xl md:text-4xl border-2 font-bold text-[#7fee64] border-[#7fee64] text-[#ddffdc]">
-        <PatientsList />
+    <div className="flex gap-2">
+      <Sidebar className="mt-0 z-50" />
+      <div className=" h-screen relative flex flex-col w-full items-start justify-start">
+        <div className="card w-full min-h-[600px] overflow-scroll relative rounded-2xl p-4 text-xl md:text-4xl border-2 font-bold text-[#7fee64] border-[#7fee64] text-[#ddffdc]">
+          <PatientsList />
+        </div>
       </div>
     </div>
   );

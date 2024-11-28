@@ -11,7 +11,7 @@ import {isTokenExpired, handleLogout} from "../hooks/useAuth";
 export default function AddPatient() {
   const router = useRouter();
   const clearAuthData = useAuthStore((state) => state.clearAuthData);
-  useAuth();
+  // useAuth();
   // const token = useAuthStore((state) => state.token);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [formData, setFormData] = useState({
@@ -138,7 +138,7 @@ export default function AddPatient() {
           />
         </> : <>
           <form className="my-8 w-full" onSubmit={handleSubmit}>
-            <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4 border-2 border-[#7fee64] p-2 rounded-md  w-full card">
+            <div className="card flex flex-col md:flex-row space-y-1 md:space-y-0 md:space-x-2 mb-4 border-2 border-[#7fee64] p-2 rounded-md  w-full bg-[#2c3341]">
               <label htmlFor="name" className=" shrink-0 text-lg">Name : </label>
               <input id="name" placeholder="" type="text" value={formData.name} onChange={handleChange} className="bg-transparent appearance-none outline-none border-none focus:ring-0 text-base font-medium w-full" />
               {errors.name && <p className="text-red-500">{errors.name}</p>}
@@ -167,7 +167,7 @@ export default function AddPatient() {
                 ADD
               </button> */}
               <button type="submit" className="card  text-white text-sm flex gap-2 p-2 px-4 items-center rounded-full bg-[#7fee64] border-[#7fee64] text-[#1b1b1b] hover:scale-110">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-circle-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M9 12h6" /><path d="M12 9v6" /></svg> Add
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-circle-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M9 12h6" /><path d="M12 9v6" /></svg> Add
               </button>
             </div>
           </form>

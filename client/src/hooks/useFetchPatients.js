@@ -7,11 +7,17 @@ import { useRouter } from "next/navigation";
 import { deleteCookie } from "cookies-next";
 
 const fetchPatientsData = async ({ queryKey }) => {
-    const [, token] = queryKey; // Destructure token from queryKey
+    const [, token] = queryKey;
     if (!token) throw new Error("Token is missing");
-    const response = await getPatients(token);
-    return response.data;
+    try {
+        const response = await getAllPatients(token);
+        return response.data || [];
+    } catch (error) {
+        console.error("Error fetching patients:", error);
+        return []; // Return an empty array if there's an error
+    }
 };
+
 
 export const usePatients = () => {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -20,12 +26,12 @@ export const usePatients = () => {
     const clearAuthData = useAuthStore.getState().clearAuthData;
 
     // Handle logout on token expiration
-    if (isTokenExpired() && typeof window !== "undefined") {
+    if (!token || isTokenExpired()) {
         localStorage.clear(); // Clear all local storage
         deleteCookie("token");
         clearAuthData?.(); // Clear Zustand store
         router.push("/sign-in");
-        return { patients: null, isLoading: false, isError: true, refreshData: () => {} };
+        return { patients: null, isLoading: false, isError: true, refreshData: () => { } };
     }
 
     // Use TanStack Query's useQuery hook
