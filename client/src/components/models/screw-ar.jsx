@@ -41,9 +41,9 @@ const ScrewAR = ({
     sideLight.position.set(5, 0, 0);
     scene.add(sideLight);
 
-    const scaledHeight = screwHeight * 0.01;
-    const scaledRadius = screwRadius * 0.01;
-    const scaledHeadHeight = headHeight * 2.5;
+    const scaledHeight = screwHeight * 0.01 * 0.1;
+    const scaledRadius = screwRadius * 0.01 * 0.1;
+    const scaledHeadHeight = headHeight * 2.5 * 0.1;
 
     const headRadius = scaledRadius * 1.4;
     const headGeometry = new THREE.CylinderGeometry(
