@@ -5,8 +5,6 @@ import { PatientsList } from "@/components/PatientsList";
 import { ThreeDots } from "react-loader-spinner";
 import "./styles.css";
 
-//hooks
-import { useAuth } from "@/hooks/useAuth";
 import { useFetchPatients } from "@/hooks/useFetchPatients";
 import { isTokenExpired } from "../hooks/useAuth";
 import { useRouter } from "next/navigation";
@@ -14,7 +12,6 @@ import useAuthStore from "@/stores/authStore";
 import { deleteCookie } from "cookies-next";
 
 export default function Home() {
-  useAuth();
   const router = useRouter();
   const clearAuthData = useAuthStore((state) => state.clearAuthData);
   useEffect(() => {

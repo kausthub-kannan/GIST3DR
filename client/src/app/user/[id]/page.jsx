@@ -98,7 +98,7 @@ export default function User() {
 
       <div className="flex flex-col lg:flex-row gap-4 w-full card rounded-md p-4 items-center min-h-[80vh]">
         <div className="w-full lg:w-1/3 h-[300px] lg:h-full">
-          <Card>
+          <Card className="p-1">
             <Screw3D
               screwHeight={user.height_millimeter}
               screwRadius={user.width_millimeter}
