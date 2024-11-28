@@ -71,14 +71,14 @@ const Bone3D = ({ modelPath }) => {
     );
 
     // Position camera at an angle
-    camera.position.set(15, 15, 15); // Changed from (5, 5, 5) to zoom out further
+    camera.position.set(25, 25, 25);
 
     // Add OrbitControls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.minDistance = 4; // Increased from 0.5
-    controls.maxDistance = 80; // Increased from 20
+    controls.minDistance = 10;
+    controls.maxDistance = 100;
     controls.enableZoom = true;
     controls.zoomSpeed = 1.0;
     controls.target.set(0, 0, 0); // Set the target point to orbit around
@@ -90,6 +90,8 @@ const Bone3D = ({ modelPath }) => {
       ArrowRight: false,
       ArrowUp: false,
       ArrowDown: false,
+      w: false,
+      s: false,
     };
 
     const handleKeyDown = (event) => {
@@ -112,11 +114,31 @@ const Bone3D = ({ modelPath }) => {
       requestAnimationFrame(animate);
 
       // Handle keyboard camera movements
-      const moveSpeed = 0.1;
-      if (keyboardControls.ArrowLeft) camera.position.x -= moveSpeed;
-      if (keyboardControls.ArrowRight) camera.position.x += moveSpeed;
-      if (keyboardControls.ArrowUp) camera.position.z -= moveSpeed;
-      if (keyboardControls.ArrowDown) camera.position.z += moveSpeed;
+      const moveSpeed = 1;
+      if (keyboardControls.ArrowLeft) {
+        camera.position.x -= moveSpeed;
+        controls.target.x -= moveSpeed;
+      }
+      if (keyboardControls.ArrowRight) {
+        camera.position.x += moveSpeed;
+        controls.target.x += moveSpeed;
+      }
+      if (keyboardControls.ArrowUp) {
+        camera.position.z -= moveSpeed;
+        controls.target.z -= moveSpeed;
+      }
+      if (keyboardControls.ArrowDown) {
+        camera.position.z += moveSpeed;
+        controls.target.z += moveSpeed;
+      }
+      if (keyboardControls.w) {
+        camera.position.y += moveSpeed;
+        controls.target.y += moveSpeed;
+      }
+      if (keyboardControls.s) {
+        camera.position.y -= moveSpeed;
+        controls.target.y -= moveSpeed;
+      }
 
       controls.update();
       renderer.render(scene, camera);
