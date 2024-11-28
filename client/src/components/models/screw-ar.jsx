@@ -43,7 +43,7 @@ const ScrewAR = ({
 
     const scaledHeight = screwHeight * 0.01;
     const scaledRadius = screwRadius * 0.01;
-    const scaledHeadHeight = headHeight * 0.01;
+    const scaledHeadHeight = headHeight * 2.5;
 
     const headRadius = scaledRadius * 1.4;
     const headGeometry = new THREE.CylinderGeometry(
