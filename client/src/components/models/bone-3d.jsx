@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { Card } from "@/components/ui/card";
 
 const Bone3D = ({ modelPath }) => {
   const mountRef = useRef(null);
@@ -10,7 +11,7 @@ const Bone3D = ({ modelPath }) => {
   useEffect(() => {
     // Set up scene, camera, and renderer
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0);
+    scene.background = new THREE.Color(0x1a1a1a);
 
     // Get parent container dimensions
     const container = mountRef.current;
@@ -41,7 +42,7 @@ const Bone3D = ({ modelPath }) => {
         object.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             child.material = new THREE.MeshStandardMaterial({
-              color: 0x888888,
+              color: 0xffffff,
               metalness: 0.8,
               roughness: 0.3,
             });
@@ -70,15 +71,14 @@ const Bone3D = ({ modelPath }) => {
     );
 
     // Position camera at an angle
-    camera.position.set(5, 5, 5); // Move camera back and up for a better initial view
-    camera.lookAt(0, 0, 0); // Look at the center
+    camera.position.set(25, 25, 25);
 
     // Add OrbitControls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.minDistance = 0.5;
-    controls.maxDistance = 20;
+    controls.minDistance = 10;
+    controls.maxDistance = 100;
     controls.enableZoom = true;
     controls.zoomSpeed = 1.0;
     controls.target.set(0, 0, 0); // Set the target point to orbit around
@@ -90,6 +90,8 @@ const Bone3D = ({ modelPath }) => {
       ArrowRight: false,
       ArrowUp: false,
       ArrowDown: false,
+      w: false,
+      s: false,
     };
 
     const handleKeyDown = (event) => {
@@ -112,11 +114,31 @@ const Bone3D = ({ modelPath }) => {
       requestAnimationFrame(animate);
 
       // Handle keyboard camera movements
-      const moveSpeed = 0.1;
-      if (keyboardControls.ArrowLeft) camera.position.x -= moveSpeed;
-      if (keyboardControls.ArrowRight) camera.position.x += moveSpeed;
-      if (keyboardControls.ArrowUp) camera.position.z -= moveSpeed;
-      if (keyboardControls.ArrowDown) camera.position.z += moveSpeed;
+      const moveSpeed = 1;
+      if (keyboardControls.ArrowLeft) {
+        camera.position.x -= moveSpeed;
+        controls.target.x -= moveSpeed;
+      }
+      if (keyboardControls.ArrowRight) {
+        camera.position.x += moveSpeed;
+        controls.target.x += moveSpeed;
+      }
+      if (keyboardControls.ArrowUp) {
+        camera.position.z -= moveSpeed;
+        controls.target.z -= moveSpeed;
+      }
+      if (keyboardControls.ArrowDown) {
+        camera.position.z += moveSpeed;
+        controls.target.z += moveSpeed;
+      }
+      if (keyboardControls.w) {
+        camera.position.y += moveSpeed;
+        controls.target.y += moveSpeed;
+      }
+      if (keyboardControls.s) {
+        camera.position.y -= moveSpeed;
+        controls.target.y -= moveSpeed;
+      }
 
       controls.update();
       renderer.render(scene, camera);
@@ -143,7 +165,11 @@ const Bone3D = ({ modelPath }) => {
     };
   }, [modelPath]);
 
-  return <div ref={mountRef} style={{ width: "100%", height: "500px" }} />;
+  return (
+    <div className="relative w-full p-1 card rounded-md">
+      <div ref={mountRef} style={{ width: "100%", height: "500px" }} />
+    </div>
+  );
 };
 
 export default Bone3D;
