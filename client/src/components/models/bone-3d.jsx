@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { Card } from "@/components/ui/card";
 
 const Bone3D = ({ modelPath }) => {
   const mountRef = useRef(null);
@@ -10,7 +11,7 @@ const Bone3D = ({ modelPath }) => {
   useEffect(() => {
     // Set up scene, camera, and renderer
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0);
+    scene.background = new THREE.Color(0x1a1a1a);
 
     // Get parent container dimensions
     const container = mountRef.current;
@@ -41,7 +42,7 @@ const Bone3D = ({ modelPath }) => {
         object.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             child.material = new THREE.MeshStandardMaterial({
-              color: 0x888888,
+              color: 0xffffff,
               metalness: 0.8,
               roughness: 0.3,
             });
@@ -142,7 +143,11 @@ const Bone3D = ({ modelPath }) => {
     };
   }, [modelPath]);
 
-  return <div ref={mountRef} style={{ width: "100%", height: "500px" }} />;
+  return (
+    <Card className="relative w-full p-1">
+      <div ref={mountRef} style={{ width: "100%", height: "500px" }} />
+    </Card>
+  );
 };
 
 export default Bone3D;
