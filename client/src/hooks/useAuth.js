@@ -28,11 +28,11 @@ export function useAuth() {
     const router = useRouter();
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null; 
 
-    useEffect(() => {
+    // useEffect(() => {
         if (!token && router.pathname !== '/sign-up') {
             router.push('/sign-in');
         }
-    }, [token, router]); // Add router to dependencies
+    // }, [token, router]); // Add router to dependencies
 }
 
 
@@ -40,11 +40,11 @@ export function useAuthOnAuthPage() {
     const router = useRouter();
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null; 
 
-    useEffect(() => {
+    // useEffect(() => {
         if (token && router.pathname !== '/sign-up') {
             router.push('/');
         }
-    }, [token, router]); // Add router to dependencies
+    // }, [token, router]); // Add router to dependencies
 }
 
 export const handleLogout = () => {

@@ -7,19 +7,15 @@ import { signin } from "../../api/auth";
 import { useRouter } from 'next/navigation';
 import { ThreeDots } from 'react-loader-spinner'
 import { setCookie } from 'cookies-next';
-
-
-import { useAuthOnAuthPage } from "../../hooks/useAuth";
-import { fetchPatients } from "@/hooks/useFetchPatients";
-import usePatientsStore from "@/stores/patientStore";
 import useAuthStore from "@/stores/authStore";
+import { usePatients } from "@/hooks/useFetchPatients";
+import { useAuthOnAuthPage } from "@/hooks/useAuth";
 
 export default function Signin() {
-    //custom hook for page protection
-    // useAuthOnAuthPage();
     
     const router = useRouter();
     const authStore = useAuthStore.getState();
+    // const { refreshData } = usePatients();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -67,7 +63,7 @@ export default function Signin() {
 
                 //updated store right after successfull signin
                 // fetchPatients(response?.data.access_token);
-                await fetchPatients();
+                // await refreshData();
 
                 //confirmations
                 setSuccess("Signup successful!");
@@ -91,7 +87,7 @@ export default function Signin() {
         <div className=" flex justify-center ">
             <div className="card max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 border-0 bg-[#7fee64] border-[#7fee64]">
                 <h2 className="font-bold text-xl">
-                    Welcome to KKs Lab
+                    Welcome to GIST3DR
                 </h2>
                 {loading ? <>
                     <ThreeDots
